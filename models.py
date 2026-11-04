@@ -9,6 +9,8 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String(20), nullable=False)
+    is_approved = db.Column(db.Boolean, default=False)
+
     def __init__(self, name: str, email: str, password_hash: str, role: str):
         self.name = name
         self.email = email
