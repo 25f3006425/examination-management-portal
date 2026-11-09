@@ -10,6 +10,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String(20), nullable=False)
     is_approved = db.Column(db.Boolean, default=False)
+    is_active = db.Column(db.Boolean, default=True)
 
     def __init__(self, name: str, email: str, password_hash: str, role: str):
         self.name = name
@@ -20,9 +21,14 @@ class User(db.Model):
 
 # Course Model
 class Course(db.Model):
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500))
+
+    def __init__(self, name: str, description: str = None):
+        self.name = name
+        self.description = description
 
 
 # Examination Model
@@ -33,6 +39,22 @@ class Examination(db.Model):
     course_id = db.Column(
         db.Integer, db.ForeignKey("course.id"), nullable=False
     )
+    def __init__(self, name: str, course_id: int = None    ):
+        self.name = name
+        self.course_id = course_id
+    # Examination status
+    status = db.Column(db.String(30), default="Draft")
+
+    # Examiner slot creation period
+    slot_creation_start = db.Column(db.String(30))
+    slot_creation_end = db.Column(db.String(30))
+
+    slot_creation_open = db.Column(db.Boolean, default=False)
+    booking_open = db.Column(db.Boolean, default=False)
+
+    # Student booking period
+    booking_start = db.Column(db.String(30))
+    booking_end = db.Column(db.String(30))
 
     course = db.relationship("Course", backref="examinations")
 
@@ -50,6 +72,10 @@ class ExaminationRubric(db.Model):
 
     examination = db.relationship("Examination", backref="rubrics")
 
+    def __init__(self, examination_id: int, criterion: str = None, marks: int = None):
+        self.examination_id = examination_id
+        self.criterion = criterion
+        self.marks = marks
 
 # Examination Slot Model
 class ExaminationSlot(db.Model):
