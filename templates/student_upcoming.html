@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>Upcoming Examinations</h2>
+
+    {% if bookings %}
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Examination</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.id }}</td>
+                    <td>{{ booking.slot.examination.name }}</td>
+                    <td>{{ booking.slot.date }}</td>
+                    <td>{{ booking.slot.time }}</td>
+                    <td>{{ booking.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+    {% else %}
+
+        <p>You have no upcoming examinations.</p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+

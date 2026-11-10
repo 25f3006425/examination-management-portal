@@ -131,6 +131,11 @@ class Booking(db.Model):
 
     slot = db.relationship("ExaminationSlot", backref="bookings")
 
+    def __init__(self, student_id: int, slot_id: int, status: str = "Booked"):
+        self.student_id = student_id
+        self.slot_id = slot_id
+        self.status = status
+
 
 # Examiner Profile Model
 class ExaminerProfile(db.Model):

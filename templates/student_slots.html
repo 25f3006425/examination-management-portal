@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>{{ examination.name }}</h2>
+
+    <p>Available examination slots are listed below.</p>
+
+    {% if available_slots %}
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+
+            <thead>
+                <tr>
+                    <th>Slot ID</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Available Seats</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in available_slots %}
+                <tr>
+                    <td>{{ item.slot.id }}</td>
+                    <td>{{ item.slot.date }}</td>
+                    <td>{{ item.slot.time }}</td>
+                    <td>{{ item.remaining_seats }}</td>
+                    <td>
+                        <form method="POST"
+                              action="{{ url_for(
+                                  'student_book_slot',
+                                  slot_id=item.slot.id
+                              ) }}">
+
+                            <button type="submit"
+                                    class="btn btn-success btn-sm">
+                                Book Slot
+                            </button>
+
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+    {% else %}
+
+        <p>No available slots for this examination.</p>
+
+    {% endif %}
+
+    <a href="{{ url_for('student_examinations') }}"
+       class="btn btn-secondary">
+        Back to Examinations
+    </a>
+
+</div>
+
+{% endblock %}

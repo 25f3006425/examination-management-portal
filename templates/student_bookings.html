@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>My Bookings</h2>
+
+    {% if bookings %}
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+
+    <thead>
+        <tr>
+            <th>Booking ID</th>
+            <th>Examination</th>
+            <th>Slot Date</th>
+            <th>Slot Time</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.id }}</td>
+            <td>{{ booking.slot.examination.name }}</td>
+            <td>{{ booking.slot.date }}</td>
+            <td>{{ booking.slot.time }}</td>
+            <td>{{ booking.status }}</td>
+
+            <td>
+                <form method="POST"
+                      action="{{ url_for(
+                          'student_cancel_booking',
+                          booking_id=booking.id
+                      ) }}">
+
+                    <button type="submit"
+                            class="btn btn-danger btn-sm"
+                            onclick="return confirm('Are you sure you want to cancel this booking?')">
+                        Cancel
+                    </button>
+
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+    </div>
+
+    {% else %}
+
+        <p>You have not booked any examination slots yet.</p>
+
+    {% endif %}
+
+    <a href="{{ url_for('student_examinations') }}"
+       class="btn btn-primary">
+        Browse Examinations
+    </a>
+
+</div>
+
+{%endblock %}

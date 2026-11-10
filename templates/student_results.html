@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>Examination Results</h2>
+
+    {% if evaluations %}
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+
+            <thead>
+                <tr>
+                    <th>Examination</th>
+                    <th>Marks</th>
+                    <th>Remarks</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for evaluation in evaluations %}
+                <tr>
+                    <td>
+                        {{ evaluation.booking.slot.examination.name }}
+                    </td>
+                    <td>{{ evaluation.marks }}</td>
+                    <td>{{ evaluation.remarks }}</td>
+                    <td>{{ evaluation.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+    {% else %}
+
+        <p>No examination results are available yet.</p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

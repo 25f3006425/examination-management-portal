@@ -6,6 +6,8 @@ from functools import wraps
 from flask import abort
 from flask import render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date
+from sqlalchemy import or_
 import models
 from models import User, Course, Examination, ExaminationSlot, Booking, ExaminationRubric, Evaluation, ExaminerProfile, EvaluationMark
 
@@ -299,7 +301,36 @@ def examiner_dashboard():
 @app.route("/student_dashboard")
 @role_required("Student")
 def student_dashboard():
-    return render_template("student_dashboard.html")
+
+    student_id = session["user_id"]
+
+    # Get all bookings of this student
+    bookings = Booking.query.filter_by(
+        student_id=student_id,
+        status="Booked"
+    ).all()
+
+    # Count total bookings
+    total_bookings = len(bookings)
+
+    # Count upcoming examinations
+    upcoming_examinations = 0
+
+    for booking in bookings:
+        upcoming_examinations += 1
+
+    # Count completed examinations
+    completed_examinations = Booking.query.filter_by(
+        student_id=student_id,
+        status="Completed"
+    ).count()
+
+    return render_template(
+        "student_dashboard.html",
+        total_bookings=total_bookings,
+        upcoming_examinations=upcoming_examinations,
+        completed_examinations=completed_examinations
+    )
 
 # Logout
 @app.route("/logout")
@@ -1257,6 +1288,300 @@ def examiner_examinations():
     return render_template(
         "examiner_examinations.html",
         examinations=examinations
+    )
+
+@app.route("/student/profile", methods=["GET", "POST"])
+@role_required("Student")
+def student_profile():
+
+    student_id = session["user_id"]
+
+    student = User.query.get_or_404(student_id)
+
+    if request.method == "POST":
+
+        name = request.form.get("name")
+        email = request.form.get("email")
+
+        if not name or not name.strip():
+            flash("Name is required.")
+            return redirect(url_for("student_profile"))
+
+        if not email or not email.strip():
+            flash("Email is required.")
+            return redirect(url_for("student_profile"))
+
+        # Check whether email is already used
+        existing_user = User.query.filter(
+            User.email == email,
+            User.id != student_id
+        ).first()
+
+        if existing_user:
+            flash("This email is already registered.")
+            return redirect(url_for("student_profile"))
+
+        student.name = name.strip()
+        student.email = email.strip()
+
+        db.session.commit()
+
+        # Update session name
+        session["user_name"] = student.name
+
+        flash("Profile updated successfully.")
+
+        return redirect(url_for("student_profile"))
+
+    return render_template(
+        "student_profile.html",
+        student=student
+    )
+
+@app.route("/student/examinations")
+@role_required("Student")
+def student_examinations():
+    search = request.args.get("search", "").strip()
+
+    # Show examinations for which booking is open
+    query = Examination.query.filter_by(booking_open=True)
+
+    # Search by examination name or examination ID
+    if search:
+        if search.isdigit():
+            query = query.filter(
+                or_(
+                    Examination.name.ilike("%" + search + "%"),
+                    Examination.id == int(search)
+                )
+            )
+        else:
+            query = query.filter(
+                Examination.name.ilike("%" + search + "%")
+            )
+
+    examinations = query.all()
+
+    return render_template(
+        "student_examinations.html",
+        examinations=examinations,
+        search=search
+    )
+
+
+@app.route("/student/examinations/<int:examination_id>")
+@role_required("Student")
+def student_examination_slots(examination_id):
+    examination = Examination.query.get_or_404(examination_id)
+
+    # Get slots belonging to this examination
+    slots = ExaminationSlot.query.filter_by(
+        examination_id=examination_id
+    ).filter(
+        ExaminationSlot.date >= date.today().isoformat()
+    ).all()
+
+    # Calculate remaining seats in each slot
+    available_slots = []
+
+    for slot in slots:
+        booked_count = Booking.query.filter_by(
+            slot_id=slot.id,
+            status="Booked"
+        ).count()
+
+        remaining_seats = slot.capacity - booked_count
+
+        if remaining_seats > 0:
+            available_slots.append({
+                "slot": slot,
+                "remaining_seats": remaining_seats
+            })
+
+    return render_template(
+        "student_slots.html",
+        examination=examination,
+        available_slots=available_slots
+    )
+
+
+@app.route("/student/book-slot/<int:slot_id>", methods=["POST"])
+@role_required("Student")
+def student_book_slot(slot_id):
+    student_id = session["user_id"]
+
+    slot = ExaminationSlot.query.get_or_404(slot_id)
+    examination = Examination.query.get_or_404(slot.examination_id)
+
+    # Check whether booking is open
+    if not examination.booking_open:
+        flash("Booking for this examination is closed.", "danger")
+        return redirect(url_for(
+            "student_examination_slots",
+            examination_id=examination.id
+        ))
+
+    # Check whether the slot date has passed
+    if slot.date < date.today().isoformat():
+        flash("You cannot book a slot in the past.", "danger")
+        return redirect(url_for(
+            "student_examination_slots",
+            examination_id=examination.id
+        ))
+
+    # Prevent the student from booking the same examination twice
+    existing_booking = Booking.query.join(
+        ExaminationSlot,
+        Booking.slot_id == ExaminationSlot.id
+    ).filter(
+        Booking.student_id == student_id,
+        Booking.status == "Booked",
+        ExaminationSlot.examination_id == examination.id
+    ).first()
+
+    if existing_booking:
+        flash(
+            "You have already booked a slot for this examination.",
+            "warning"
+        )
+        return redirect(url_for(
+            "student_examination_slots",
+            examination_id=examination.id
+        ))
+
+    # Check how many students have already booked this slot
+    booked_count = Booking.query.filter_by(
+        slot_id=slot.id,
+        status="Booked"
+    ).count()
+
+    if booked_count >= slot.capacity:
+        flash("This slot is already full.", "danger")
+        return redirect(url_for(
+            "student_examination_slots",
+            examination_id=examination.id
+        ))
+
+    # Create the booking
+    booking = Booking(
+        student_id=student_id,
+        slot_id=slot.id,
+        status="Booked"
+    )
+
+    db.session.add(booking)
+    db.session.commit()
+
+    flash("Your examination slot has been booked successfully.", "success")
+
+    return redirect(url_for("student_bookings"))
+
+@app.route("/student/bookings")
+@role_required("Student")
+def student_bookings():
+    bookings = Booking.query.filter_by(
+        student_id=session["user_id"],
+        status="Booked"
+    ).all()
+
+    return render_template(
+        "student_bookings.html",
+        bookings=bookings
+    )
+
+@app.route("/student/cancel-booking/<int:booking_id>", methods=["POST"])
+@role_required("Student")
+def student_cancel_booking(booking_id):
+
+    booking = Booking.query.filter_by(
+        id=booking_id,
+        student_id=session["user_id"]
+    ).first_or_404()
+
+    # Only active bookings can be cancelled
+    if booking.status != "Booked":
+        flash("This booking cannot be cancelled.", "danger")
+        return redirect(url_for("student_bookings"))
+
+    examination = booking.slot.examination
+
+    # Check the cancellation deadline
+    if examination.booking_end:
+        if date.today().isoformat() > examination.booking_end:
+            flash(
+                "The cancellation deadline has passed.",
+                "danger"
+            )
+            return redirect(url_for("student_bookings"))
+
+    # Cancel the booking
+    booking.status = "Cancelled"
+    db.session.commit()
+
+    flash("Your booking has been cancelled successfully.", "success")
+
+    return redirect(url_for("student_bookings"))
+
+
+@app.route("/student/upcoming")
+@role_required("Student")
+def student_upcoming():
+
+    bookings = Booking.query.filter_by(
+        student_id=session["user_id"],
+        status="Booked"
+    ).all()
+
+    upcoming_bookings = []
+
+    for booking in bookings:
+        if booking.slot.date >= date.today().isoformat():
+            upcoming_bookings.append(booking)
+
+    return render_template(
+        "student_upcoming.html",
+        bookings=upcoming_bookings
+    )
+
+
+@app.route("/student/history")
+@role_required("Student")
+def student_history():
+
+    bookings = Booking.query.filter_by(
+        student_id=session["user_id"]
+    ).all()
+
+    history_bookings = []
+
+    for booking in bookings:
+        if booking.status in ["Completed", "Cancelled"]:
+            history_bookings.append(booking)
+
+        elif booking.slot.date < date.today().isoformat():
+            history_bookings.append(booking)
+
+    return render_template(
+        "student_history.html",
+        bookings=history_bookings
+    )
+
+
+@app.route("/student/results")
+@role_required("Student")
+def student_results():
+
+    evaluations = Evaluation.query.join(
+        Booking,
+        Evaluation.booking_id == Booking.id
+    ).filter(
+        Booking.student_id == session["user_id"],
+        Evaluation.status == "Completed"
+    ).all()
+
+    return render_template(
+        "student_results.html",
+        evaluations=evaluations
     )
 
 if __name__ == "__main__":
