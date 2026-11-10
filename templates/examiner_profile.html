@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>My Profile</h2>
+
+    <form method="POST">
+
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+
+            <input type="text"
+                   name="name"
+                   class="form-control"
+                   value="{{ examiner.name }}"
+                   required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+
+            <input type="email"
+                   class="form-control"
+                   value="{{ examiner.email }}"
+                   readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Qualification</label>
+
+            <input type="text"
+                   name="qualification"
+                   class="form-control"
+                   value="{{ profile.qualification or '' }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Specialization</label>
+
+            <input type="text"
+                   name="specialization"
+                   class="form-control"
+                   value="{{ profile.specialization or '' }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Update Profile
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

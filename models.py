@@ -96,6 +96,22 @@ class ExaminationSlot(db.Model):
 
     examiner = db.relationship("User", backref="assigned_slots")
 
+    capacity = db.Column(db.Integer, default=1)
+
+    
+    def __init__(
+        self,
+        examination_id: int,
+        examiner_id: int,
+        date: str,
+        time: str,
+        capacity: int = 1
+    ):
+        self.examination_id = examination_id
+        self.examiner_id = examiner_id
+        self.date = date
+        self.time = time
+        self.capacity = capacity
 
 # Booking Model
 class Booking(db.Model):
@@ -116,7 +132,7 @@ class Booking(db.Model):
     slot = db.relationship("ExaminationSlot", backref="bookings")
 
 
-# 7. Examiner Profile Model
+# Examiner Profile Model
 class ExaminerProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
@@ -132,3 +148,79 @@ class ExaminerProfile(db.Model):
         "User",
         backref=db.backref("examiner_profile", uselist=False)
     )
+
+    def __init__(self,
+        user_id: int,
+        qualification: str = None,
+        specialization: str = None
+    ):
+        self.user_id = user_id
+        self.qualification = qualification
+        self.specialization = specialization
+
+# Evaluation
+class Evaluation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    booking_id = db.Column(
+        db.Integer,
+        db.ForeignKey("booking.id"),
+        unique=True,
+        nullable=False
+    )
+
+    examiner_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
+
+    def __init__(self, booking_id: int, examiner_id: int = None):
+        self.booking_id = booking_id
+        self.examiner_id = examiner_id
+
+    marks = db.Column(db.Integer)
+    remarks = db.Column(db.String(500))
+    status = db.Column(db.String(20), default="Pending")
+
+    booking = db.relationship("Booking", backref="evaluation")
+    examiner = db.relationship("User")
+
+
+class EvaluationMark(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    evaluation_id = db.Column(
+        db.Integer,
+        db.ForeignKey("evaluation.id"),
+        nullable=False
+    )
+
+    rubric_id = db.Column(
+        db.Integer,
+        db.ForeignKey("examination_rubric.id"),
+        nullable=False
+    )
+
+    marks = db.Column(db.Integer, nullable=False)
+
+    rubric = db.relationship("ExaminationRubric")
+
+    evaluation = db.relationship(
+        "Evaluation",
+        backref="rubric_marks"
+    )
+
+    def __init__(
+        self,
+        evaluation_id: int,
+        rubric_id: int,
+        marks: int
+    ):
+        self.evaluation_id = evaluation_id
+        self.rubric_id = rubric_id
+        self.marks = marks
+
+
+

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>My Assigned Examinations</h2>
+
+    {% if examinations %}
+
+    <table class="table table-bordered">
+
+        <thead>
+            <tr>
+                <th>Examination ID</th>
+                <th>Examination Name</th>
+                <th>Course</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for examination in examinations %}
+
+            <tr>
+                <td>{{ examination.id }}</td>
+                <td>{{ examination.name }}</td>
+                <td>{{ examination.course.name }}</td>
+                <td>{{ examination.status }}</td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% else %}
+
+    <p>No examinations have been assigned to you yet.</p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

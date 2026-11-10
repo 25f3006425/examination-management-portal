@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>Booked Students</h2>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Student Name</th>
+            <th>Examination</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Action</th>
+        </tr>
+
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.student.name }}</td>
+            <td>{{ booking.slot.examination.name }}</td>
+            <td>{{ booking.slot.date }}</td>
+            <td>{{ booking.slot.time }}</td>
+            <td>
+                <a href="{{ url_for('evaluate_student', booking_id=booking.id) }}"
+                   class="btn btn-primary btn-sm">
+                    Evaluate
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</div>
+
+{% endblock %}
