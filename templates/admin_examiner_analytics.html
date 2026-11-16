@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}Examiner Progress & Grading Analytics – Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-person-check me-2 text-primary"></i>Faculty Examiner Progress & Grading Tracking</h2>
+            <p class="text-muted mb-0">Monitor examiner evaluation completion rates, workload, and average grading distributions.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Visual Charts (Chart.js) -->
+    <div class="row g-4 mb-4">
+        <!-- Progress Bar Chart (Completed vs Pending) -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm border h-100">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-hourglass-split me-2 text-primary"></i>Evaluation Progress (Completed vs Pending)</h5>
+                    <span class="badge bg-light text-muted border">Workload Status</span>
+                </div>
+                <div class="card-body p-4">
+                    {% if examiners_data %}
+                    <div style="position: relative; height: 320px;">
+                        <canvas id="examinerProgressChart"></canvas>
+                    </div>
+                    {% else %}
+                    <div class="text-center text-muted py-5">No examiner data available.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Average Marks Comparison Chart -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm border h-100">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-bar-chart-steps me-2 text-primary"></i>Average Marks Awarded</h5>
+                    <span class="badge bg-light text-muted border">Grading Standard</span>
+                </div>
+                <div class="card-body p-4">
+                    {% if examiners_data %}
+                    <div style="position: relative; height: 320px;">
+                        <canvas id="examinerGradingChart"></canvas>
+                    </div>
+                    {% else %}
+                    <div class="text-center text-muted py-5">No grading data available.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Examiner Tracking Table -->
+    <div class="card shadow-sm border">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-table me-2 text-primary"></i>Examiner Performance & Status Table</h5>
+            <span class="badge bg-primary">{{ examiners_data|length }} Faculty Examiners</span>
+        </div>
+        <div class="card-body p-0">
+            {% if examiners_data %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Examiner Details</th>
+                            <th class="text-center">Slots Created</th>
+                            <th class="text-center">Assigned Bookings</th>
+                            <th>Evaluation Progress</th>
+                            <th class="text-center">Avg Marks</th>
+                            <th class="text-center">Score Range (Min-Max)</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in examiners_data %}
+                        <tr>
+                            <td>
+                                <div class="fw-bold text-dark">{{ item.examiner.name }}</div>
+                                <div class="small text-muted">{{ item.examiner.email }}</div>
+                                {% if item.examiner.examiner_profile and item.examiner.examiner_profile.specialization %}
+                                <div class="small text-secondary"><i class="bi bi-bookmark me-1"></i>{{ item.examiner.examiner_profile.specialization }}</div>
+                                {% endif %}
+                            </td>
+                            <td class="text-center fw-semibold">{{ item.slots_count }}</td>
+                            <td class="text-center fw-semibold">{{ item.bookings_count }}</td>
+                            <td style="min-width: 200px;">
+                                <div class="d-flex justify-content-between small mb-1">
+                                    <span><strong>{{ item.completed_count }}</strong> completed</span>
+                                    <span class="text-muted">{{ item.pending_count }} pending</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ item.completion_pct }}%;" aria-valuenow="{{ item.completion_pct }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="text-end small text-muted mt-1">{{ item.completion_pct }}% done</div>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 fs-6">
+                                    {{ item.avg_marks }}
+                                </span>
+                            </td>
+                            <td class="text-center small">
+                                {% if item.completed_count > 0 %}
+                                <span class="text-muted">{{ item.lowest_marks }}</span> - <span class="fw-bold text-success">{{ item.highest_marks }}</span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if item.pending_count == 0 and item.completed_count > 0 %}
+                                <span class="badge bg-success"><i class="bi bi-check-all me-1"></i>Up to date</span>
+                                {% elif item.pending_count > 0 %}
+                                <span class="badge bg-warning text-dark"><i class="bi bi-clock me-1"></i>{{ item.pending_count }} Pending</span>
+                                {% else %}
+                                <span class="badge bg-secondary">No Bookings</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-people display-4 d-block mb-2"></i>
+                No examiners found in the system.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    {% if examiners_data %}
+    document.addEventListener("DOMContentLoaded", function () {
+        const examinerNames = [{% for item in examiners_data %}"{{ item.examiner.name }}",{% endfor %}];
+        const completedCounts = [{% for item in examiners_data %}{{ item.completed_count }},{% endfor %}];
+        const pendingCounts = [{% for item in examiners_data %}{{ item.pending_count }},{% endfor %}];
+        const avgScores = [{% for item in examiners_data %}{{ item.avg_marks }},{% endfor %}];
+
+        // Chart 1: Progress (Completed vs Pending)
+        const progressCtx = document.getElementById('examinerProgressChart').getContext('2d');
+        new Chart(progressCtx, {
+            type: 'bar',
+            data: {
+                labels: examinerNames,
+                datasets: [
+                    {
+                        label: 'Completed Evaluations',
+                        data: completedCounts,
+                        backgroundColor: '#198754',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Pending Evaluations',
+                        data: pendingCounts,
+                        backgroundColor: '#ffc107',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true, beginAtZero: true }
+                },
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Chart 2: Average Grading Standards
+        const gradingCtx = document.getElementById('examinerGradingChart').getContext('2d');
+        new Chart(gradingCtx, {
+            type: 'bar',
+            data: {
+                labels: examinerNames,
+                datasets: [{
+                    label: 'Average Score Awarded',
+                    data: avgScores,
+                    backgroundColor: 'rgba(13, 110, 253, 0.75)',
+                    borderColor: '#0d6efd',
+                    borderWidth: 1.5,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    });
+    {% endif %}
+</script>
+{% endblock %}

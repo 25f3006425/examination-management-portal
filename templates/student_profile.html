@@ -1,76 +1,137 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Student Profile</title>
+{% extends "base.html" %}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-</head>
+{% block title %}My Student Profile – Exam Portal{% endblock %}
 
-<body>
-
-<div class="container mt-5">
-
-    <h2>My Profile</h2>
-
-    <a href="/student_dashboard" class="btn btn-secondary mb-3">
-        Back to Dashboard
-    </a>
-
-    {% with messages = get_flashed_messages() %}
-        {% for message in messages %}
-            <div class="alert alert-info">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endwith %}
-
-    <div class="card shadow">
-
-        <div class="card-body">
-
-            <form method="POST">
-
-                <div class="mb-3">
-                    <label class="form-label">Name</label>
-
-                    <input type="text"
-                           name="name"
-                           class="form-control"
-                           value="{{ student.name }}"
-                           required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-
-                    <input type="email"
-                           name="email"
-                           class="form-control"
-                           value="{{ student.email }}"
-                           required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Role</label>
-
-                    <input type="text"
-                           class="form-control"
-                           value="{{ student.role }}"
-                           readonly>
-                </div>
-
-                <button type="submit" class="btn btn-primary">
-                    Update Profile
-                </button>
-
-            </form>
-
+{% block content %}
+<div class="container my-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-person-circle me-2 text-primary"></i>My Student Profile</h2>
+            <p class="text-muted mb-0">Official academic credentials and contact information registered in college records.</p>
         </div>
-
+        <div>
+            <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Dashboard
+            </a>
+        </div>
     </div>
 
-</div>
+    <div class="row g-4">
+        <!-- Profile Overview Card -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border text-center p-4 h-100 bg-white">
+                <div class="rounded-circle bg-primary-subtle text-primary mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2.2rem;">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <h4 class="fw-bold text-dark mb-1">{{ student.name }}</h4>
+                <div class="badge bg-primary fs-6 py-2 px-3 mb-3">{{ profile.roll_number or 'ROLL-NOT-SET' }}</div>
+                
+                <ul class="list-group list-group-flush text-start small border-top pt-2">
+                    <li class="list-group-item d-flex justify-content-between px-0">
+                        <span class="text-muted">Account Role:</span>
+                        <span class="fw-semibold">{{ student.role }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0">
+                        <span class="text-muted">Department:</span>
+                        <span class="fw-semibold text-end">{{ profile.department or 'Data Science & Applications' }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0">
+                        <span class="text-muted">Academic Year:</span>
+                        <span class="fw-semibold">{{ profile.year or 'Standard' }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0">
+                        <span class="text-muted">Account Status:</span>
+                        <span class="badge bg-success">Active & Verified</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-</body>
-</html>
+        <!-- Editable Profile Information Form -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border bg-white">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-sliders me-2 text-primary"></i>Edit Personal & Contact Details</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        <div class="row g-3">
+                            <!-- Roll Number (Institutional Identifier) -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Permanent Roll Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-person-badge"></i></span>
+                                    <input type="text" class="form-control bg-light" value="{{ profile.roll_number or '' }}" readonly>
+                                </div>
+                                <div class="form-text">Assigned by institutional registrar.</div>
+                            </div>
+
+                            <!-- Registered Email -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">College Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                                    <input type="email" class="form-control bg-light" value="{{ student.email }}" readonly>
+                                </div>
+                                <div class="form-text">Primary login credential.</div>
+                            </div>
+
+                            <!-- Full Name -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                                <input type="text" name="name" class="form-control" value="{{ student.name }}" required>
+                            </div>
+
+                            <!-- Phone Number -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Contact / Mobile Phone</label>
+                                <input type="tel" name="phone" class="form-control" value="{{ profile.phone or '' }}" placeholder="e.g. 9876543210">
+                            </div>
+
+                            <!-- Department -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Academic Department</label>
+                                <select name="department" class="form-select">
+                                    <option value="Data Science and Applications" {% if profile.department == 'Data Science and Applications' %}selected{% endif %}>Data Science and Applications</option>
+                                    <option value="Computer Science & Engineering" {% if profile.department == 'Computer Science & Engineering' %}selected{% endif %}>Computer Science & Engineering</option>
+                                    <option value="Electrical Engineering" {% if profile.department == 'Electrical Engineering' %}selected{% endif %}>Electrical Engineering</option>
+                                    <option value="Mechanical Engineering" {% if profile.department == 'Mechanical Engineering' %}selected{% endif %}>Mechanical Engineering</option>
+                                    <option value="Civil Engineering" {% if profile.department == 'Civil Engineering' %}selected{% endif %}>Civil Engineering</option>
+                                </select>
+                            </div>
+
+                            <!-- Academic Year -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Current Academic Year</label>
+                                <select name="year" class="form-select">
+                                    <option value="1st Year" {% if profile.year == '1st Year' %}selected{% endif %}>1st Year (Foundation)</option>
+                                    <option value="2nd Year" {% if profile.year == '2nd Year' %}selected{% endif %}>2nd Year (Diploma)</option>
+                                    <option value="3rd Year" {% if profile.year == '3rd Year' %}selected{% endif %}>3rd Year (Degree)</option>
+                                    <option value="4th Year" {% if profile.year == '4th Year' %}selected{% endif %}>4th Year (Advanced/BS)</option>
+                                </select>
+                            </div>
+
+                            <!-- Change Password -->
+                            <div class="col-12 mt-4 pt-3 border-top">
+                                <h6 class="fw-bold text-dark mb-2"><i class="bi bi-shield-lock me-2 text-primary"></i>Security & Password Reset</h6>
+                                <label class="form-label small text-muted">Leave blank if you do not want to alter your assigned password.</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                    <input type="password" name="new_password" class="form-control" placeholder="Enter new password (optional)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">
+                                <i class="bi bi-check2-circle me-1"></i> Save Profile Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,68 +1,84 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Course Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+{% extends "base.html" %}
 
-<div class="container mt-4">
+{% block title %}Course Management – Admin Portal{% endblock %}
 
-    <h2>Course Management</h2>
+{% block content %}
+<div class="container my-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-book-half me-2 text-primary"></i>Course & Curriculum Management</h2>
+            <p class="text-muted mb-0">Manage institutional courses, attach study resources and manage examination associations.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('add_course') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Add New Course
+            </a>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Dashboard
+            </a>
+        </div>
+    </div>
 
-    {% with messages = get_flashed_messages() %}
-        {% for message in messages %}
-            <div class="alert alert-info">{{ message }}</div>
-        {% endfor %}
-    {% endwith %}
-
-    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary mb-3">
-        Back to Dashboard
-    </a>
-
-    <a href="{{ url_for('add_course') }}" class="btn btn-primary mb-3">
-        Add New Course
-    </a>
-
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Course Name</th>
-                <th>Description</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            {% for course in courses %}
-            <tr>
-                <td>{{ course.id }}</td>
-                <td>{{ course.name }}</td>
-                <td>{{ course.description or "No description" }}</td>
-                <td>
-                    <a href="{{ url_for('edit_course', course_id=course.id) }}"
-                       class="btn btn-warning btn-sm">
-                        Edit
-                    </a>
-
-                    <form action="{{ url_for('delete_course', course_id=course.id) }}"
-                          method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
+    <!-- Courses Table -->
+    <div class="card shadow-sm border bg-white">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-collection me-2 text-primary"></i>Registered Courses</h5>
+            <span class="badge bg-primary rounded-pill">{{ courses|length }} Courses</span>
+        </div>
+        <div class="card-body p-0">
+            {% if courses %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 70px;">ID</th>
+                            <th>Course Name & Description</th>
+                            <th>Study Resources</th>
+                            <th>Examinations Linked</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in courses %}
+                        <tr>
+                            <td class="text-muted fw-bold">#{{ c.id }}</td>
+                            <td>
+                                <div class="fw-bold text-dark fs-6">{{ c.name }}</div>
+                                <div class="small text-muted">{{ c.description or 'No description provided.' }}</div>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('course_resources', course_id=c.id) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-folder2-open me-1"></i>Resources ({{ c.resources|length }})
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border">{{ c.examinations|length }} exam(s)</span>
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('edit_course', course_id=c.id) }}" class="btn btn-outline-warning">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <form action="{{ url_for('delete_course', course_id=c.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this course?');">
+                                        <button type="submit" class="btn btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             {% else %}
-            <tr>
-                <td colspan="4" class="text-center">No courses added yet.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-book display-4 d-block mb-2 text-secondary"></i>
+                No courses added yet. Click <strong>Add New Course</strong> to create one.
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
-
-</body>
-</html>
+{% endblock %}

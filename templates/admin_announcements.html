@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Announcement Management – Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-megaphone me-2 text-primary"></i>Announcement & Notification Management</h2>
+            <p class="text-muted mb-0">Publish institutional circulars, exam schedule notifications, and calendar events for students and faculty.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Publish Announcement Form -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm border">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-broadcast me-2"></i>Publish New Announcement</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('admin_announcements') }}">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Announcement Title <span class="text-danger">*</span></label>
+                            <input type="text" name="title" class="form-control" placeholder="e.g. Mid-Term Slot Booking Guidelines" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Target Audience</label>
+                            <select name="target_role" class="form-select">
+                                <option value="All" selected>All (Students & Faculty Examiners)</option>
+                                <option value="Student">Students Only</option>
+                                <option value="Examiner">Examiners Only</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Event Date (For Academic Calendar Integration)</label>
+                            <input type="date" name="event_date" class="form-control">
+                            <div class="form-text">Optional: If set, this event will be highlighted on the student monthly calendar.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Announcement Content <span class="text-danger">*</span></label>
+                            <textarea name="content" class="form-control" rows="4" placeholder="Type the complete announcement message..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                            <i class="bi bi-send-fill me-1"></i> Broadcast Announcement
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Published Announcements List -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm border">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history me-2 text-primary"></i>Published Bulletins</h5>
+                    <span class="badge bg-primary rounded-pill">{{ announcements|length }}</span>
+                </div>
+                <div class="card-body p-0">
+                    {% if announcements %}
+                    <div class="list-group list-group-flush">
+                        {% for a in announcements %}
+                        <div class="list-group-item p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="fw-bold text-dark mb-0">{{ a.title }}</h6>
+                                <form method="POST" action="{{ url_for('delete_announcement', announcement_id=a.id) }}" onsubmit="return confirm('Delete this announcement?');">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm py-0 px-2" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            <p class="text-secondary small mb-2">{{ a.content }}</p>
+                            <div class="d-flex gap-2 flex-wrap small">
+                                <span class="badge bg-secondary-subtle text-secondary border">Audience: {{ a.target_role }}</span>
+                                {% if a.event_date %}
+                                <span class="badge bg-warning-subtle text-warning-emphasis border"><i class="bi bi-calendar-event me-1"></i>Calendar Date: {{ a.event_date }}</span>
+                                {% endif %}
+                                <span class="text-muted"><i class="bi bi-clock me-1"></i>Published: {{ a.created_at }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="p-4 text-center text-muted">
+                        <i class="bi bi-megaphone display-6 d-block mb-2 text-secondary"></i>
+                        No announcements published yet.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

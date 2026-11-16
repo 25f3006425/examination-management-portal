@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Examination Management Portal{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body { padding-top: 60px; background-color: #f8f9fa; }
+        .navbar-brand { font-weight: 700; letter-spacing: 0.5px; }
+        .nav-link { font-weight: 500; font-size: 0.92rem; }
+        .nav-link.active { font-weight: 600; color: #fff !important; }
+        main { min-height: calc(100vh - 60px - 56px); }
+        footer { background: #1f2429; color: #adb5bd; padding: 1.1rem 0; font-size: 0.85rem; }
+        .stat-card { transition: transform 0.18s, box-shadow 0.18s; border-radius: 0.5rem; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important; }
+        .card { border-radius: 0.5rem; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.04); }
+        .badge-notification { position: absolute; top: -4px; right: -6px; font-size: 0.65rem; border-radius: 50%; padding: 0.25em 0.45em; }
+        @media print {
+            .navbar, footer, .no-print, .btn-print-hide { display: none !important; }
+            body { padding-top: 0 !important; background: #fff !important; }
+            main { min-height: auto !important; }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-xl navbar-dark bg-dark fixed-top shadow-sm">
+        <div class="container-fluid px-3 px-lg-4">
+            <a class="navbar-brand text-white" href="{% if session.get('user_role') == 'Admin' %}{{ url_for('admin_dashboard') }}{% elif session.get('user_role') == 'Examiner' %}{{ url_for('examiner_dashboard') }}{% elif session.get('user_role') == 'Student' %}{{ url_for('student_dashboard') }}{% else %}{{ url_for('login') }}{% endif %}">
+                <i class="bi bi-mortarboard-fill me-1 text-primary"></i> Exam Portal
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-xl-0">
+                    {% if session.get("user_role") == "Admin" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('courses') }}"><i class="bi bi-book me-1"></i>Courses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('examinations') }}"><i class="bi bi-clipboard2-check me-1"></i>Examinations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_slots') }}"><i class="bi bi-calendar-range me-1"></i>Slots</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_bookings') }}"><i class="bi bi-journal-bookmark me-1"></i>Bookings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_users') }}"><i class="bi bi-people me-1"></i>Students & Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_examiner_analytics') }}"><i class="bi bi-person-check me-1"></i>Examiner Tracking</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('performance_analytics') }}"><i class="bi bi-graph-up-arrow me-1"></i>Analytics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_announcements') }}"><i class="bi bi-megaphone me-1"></i>Announcements</a>
+                        </li>
+                    {% elif session.get("user_role") == "Examiner" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('examiner_dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('examiner_examinations') }}"><i class="bi bi-clipboard2-check me-1"></i>Assigned Exams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('examiner_slots') }}"><i class="bi bi-clock-history me-1"></i>Slot Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('examiner_bookings') }}"><i class="bi bi-pencil-square me-1"></i>Student Evaluations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('examiner_history') }}"><i class="bi bi-archive me-1"></i>History & Stats</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('performance_analytics') }}"><i class="bi bi-graph-up-arrow me-1"></i>Analytics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('examiner_profile') }}"><i class="bi bi-person-badge me-1"></i>Profile</a>
+                        </li>
+                    {% elif session.get("user_role") == "Student" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('student_dashboard') }}"><i class="bi bi-house-door me-1"></i>Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('student_examinations') }}"><i class="bi bi-search me-1"></i>Find Exams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('student_bookings') }}"><i class="bi bi-ticket-perforated me-1"></i>My Bookings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('student_calendar') }}"><i class="bi bi-calendar3 me-1"></i>Exam Calendar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('student_resources') }}"><i class="bi bi-folder2-open me-1"></i>Study Resources</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('student_results') }}"><i class="bi bi-award me-1"></i>Results & Transcripts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('performance_analytics') }}"><i class="bi bi-graph-up me-1"></i>My Analytics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('student_profile') }}"><i class="bi bi-person-circle me-1"></i>My Profile</a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                {% if session.get("user_id") %}
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Notification Bell -->
+                        <a href="{{ url_for('notifications') }}" class="btn btn-outline-secondary btn-sm position-relative text-light" title="Notification Centre">
+                            <i class="bi bi-bell-fill"></i>
+                            {% if unread_notifications_count and unread_notifications_count > 0 %}
+                                <span class="badge bg-danger badge-notification">{{ unread_notifications_count }}</span>
+                            {% endif %}
+                        </a>
+
+                        <div class="text-light d-none d-md-block text-end">
+                            <div class="small fw-semibold">{{ session.get("user_name") }}</div>
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle">{{ session.get("user_role") }}</span>
+                        </div>
+
+                        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm" title="Log out of system">
+                            <i class="bi bi-box-arrow-right me-1"></i>Logout
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm">Login</a>
+                        <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">Register</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    <div class="container mt-3 no-print">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }} alert-dismissible fade show shadow-sm" role="alert">
+                        {% if category == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>{% elif category == 'danger' %}<i class="bi bi-x-circle-fill me-2"></i>{% elif category == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% else %}<i class="bi bi-info-circle-fill me-2"></i>{% endif %}
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="py-3">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center no-print">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center flex-wrap small">
+                <span>&copy; {{ 2026 }} Examination Management Portal &middot; Academic Year 2026</span>
+                <span class="text-secondary">Official Evaluation & Secure Assessment Platform</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

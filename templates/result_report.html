@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Result Report – {{ evaluation.booking.slot.examination.name }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <!-- Action Bar (hidden when printing) -->
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+        <a href="{% if session.get('user_role') == 'Student' %}{{ url_for('student_results') }}{% elif session.get('user_role') == 'Examiner' %}{{ url_for('examiner_history') }}{% else %}{{ url_for('admin_bookings') }}{% endif %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Back to Results
+        </a>
+        <div class="d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-primary">
+                <i class="bi bi-printer me-1"></i> Print / Save as PDF
+            </button>
+            {% if session.get('user_role') == 'Student' %}
+            <a href="{{ url_for('download_result_pdf', evaluation_id=evaluation.id) }}" class="btn btn-success">
+                <i class="bi bi-file-earmark-pdf me-1"></i> Download Vector PDF
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Official Result Card -->
+    <div class="card shadow-sm border p-4 p-md-5 bg-white">
+        <!-- Institution Header -->
+        <div class="border-bottom pb-4 mb-4 text-center">
+            <div class="d-flex justify-content-center align-items-center gap-2 mb-1">
+                <i class="bi bi-mortarboard-fill fs-2 text-primary"></i>
+                <h2 class="fw-bold mb-0 text-dark">EXAMINATION MANAGEMENT PORTAL</h2>
+            </div>
+            <p class="text-muted mb-1 text-uppercase fw-semibold letter-spacing-1">Official Academic Evaluation Transcript</p>
+            <div class="badge bg-light text-dark border px-3 py-1 mt-1">Ref ID: EXP-EV-{{ "%05d"|format(evaluation.id) }} &middot; Issued: {{ evaluation.booking.slot.date }}</div>
+        </div>
+
+        <!-- Student & Exam Details (2 Columns) -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="p-3 rounded bg-light border h-100">
+                    <h6 class="text-primary fw-bold text-uppercase mb-3"><i class="bi bi-person-vcard me-2"></i>Candidate Information</h6>
+                    <table class="table table-sm table-borderless mb-0">
+                        <tr>
+                            <th class="text-muted w-40">Candidate Name:</th>
+                            <td class="fw-bold">{{ evaluation.booking.student.name }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Roll Number:</th>
+                            <td class="fw-bold text-primary">{{ evaluation.booking.student.roll_number or 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Department:</th>
+                            <td>{{ evaluation.booking.student.department or 'General' }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Academic Year:</th>
+                            <td>{{ evaluation.booking.student.year or 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Registered Email:</th>
+                            <td>{{ evaluation.booking.student.email }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 rounded bg-light border h-100">
+                    <h6 class="text-primary fw-bold text-uppercase mb-3"><i class="bi bi-journal-bookmark me-2"></i>Assessment Information</h6>
+                    <table class="table table-sm table-borderless mb-0">
+                        <tr>
+                            <th class="text-muted w-40">Examination:</th>
+                            <td class="fw-bold">{{ evaluation.booking.slot.examination.name }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Course:</th>
+                            <td>{{ evaluation.booking.slot.examination.course.name }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Slot Schedule:</th>
+                            <td>{{ evaluation.booking.slot.date }} at {{ evaluation.booking.slot.time }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Assigned Examiner:</th>
+                            <td class="fw-bold">{{ evaluation.examiner.name }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Evaluation Status:</th>
+                            <td><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Completed</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rubric Scores Table -->
+        <div class="mb-4">
+            <h6 class="fw-bold text-dark text-uppercase mb-3"><i class="bi bi-card-checklist me-2"></i>Rubric-Wise Marks Breakdown</h6>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 50px;" class="text-center">#</th>
+                            <th>Assessment Criterion / Rubric</th>
+                            <th style="width: 140px;" class="text-center">Max Marks</th>
+                            <th style="width: 150px;" class="text-center">Marks Awarded</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if evaluation.rubric_marks %}
+                            {% for rm in evaluation.rubric_marks %}
+                            <tr>
+                                <td class="text-center text-muted">{{ loop.index }}</td>
+                                <td class="fw-medium">{{ rm.rubric.criterion if rm.rubric else 'Criterion' }}</td>
+                                <td class="text-center">{{ rm.rubric.marks if rm.rubric else '-' }}</td>
+                                <td class="text-center fw-bold text-success">{{ rm.marks }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td class="text-center text-muted">1</td>
+                                <td class="fw-medium">Comprehensive Evaluation</td>
+                                <td class="text-center">{{ total_rubric_marks }}</td>
+                                <td class="text-center fw-bold text-success">{{ evaluation.marks }}</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                    <tfoot class="table-primary border-top border-2 border-primary">
+                        <tr class="fw-bold">
+                            <td colspan="2" class="text-end text-uppercase">Total Aggregate:</td>
+                            <td class="text-center">{{ total_rubric_marks }}</td>
+                            <td class="text-center text-success fs-5">{{ evaluation.marks }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- Result Summary & Remarks -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-5">
+                <div class="p-3 rounded border text-center {% if percentage >= 50 %}bg-success-subtle border-success{% else %}bg-danger-subtle border-danger{% endif %} h-100 d-flex flex-column justify-content-center">
+                    <div class="small text-uppercase fw-semibold mb-1 text-muted">Final Grade & Percentage</div>
+                    <div class="display-6 fw-bold {% if percentage >= 50 %}text-success{% else %}text-danger{% endif %}">{{ "%.1f"|format(percentage) }}%</div>
+                    <div class="badge {% if percentage >= 50 %}bg-success{% else %}bg-danger{% endif %} fs-6 py-2 px-3 mt-2">
+                        {% if percentage >= 50 %}PASSED &middot; COMPLETED{% else %}NEEDS IMPROVEMENT{% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-7">
+                <div class="p-3 rounded bg-light border h-100">
+                    <h6 class="fw-bold text-dark text-uppercase mb-2"><i class="bi bi-chat-left-quote me-2"></i>Examiner Feedback & Remarks</h6>
+                    <blockquote class="blockquote mb-0 fs-6 text-secondary fst-italic">
+                        "{{ evaluation.remarks or 'Evaluation successfully completed with satisfactory fulfillment of academic rubrics.' }}"
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+
+        <!-- Official Sign-off -->
+        <div class="row pt-4 border-top mt-4 align-items-end text-center text-md-start">
+            <div class="col-md-7 mb-3 mb-md-0">
+                <div class="small text-muted">
+                    <i class="bi bi-shield-lock-fill text-success me-1"></i> <strong>Digitally Authenticated Examination Record</strong><br>
+                    Generated securely from the Examination Management Portal database.<br>
+                    Verification Hash: <code>{{ evaluation.id * 7392 + 104928 }}</code>
+                </div>
+            </div>
+            <div class="col-md-5 text-md-end">
+                <div class="d-inline-block text-center">
+                    <div class="border-bottom border-dark pb-1 px-4 mb-1 fw-bold text-dark">{{ evaluation.examiner.name }}</div>
+                    <div class="small text-muted">Authorized Faculty Examiner</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

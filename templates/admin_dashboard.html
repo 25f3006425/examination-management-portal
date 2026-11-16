@@ -1,272 +1,315 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Dashboard</title>
+{% extends "base.html" %}
+
+
+{% block title %}Admin Dashboard – Exam Portal{% endblock %}
+
+
+{% block content %}
+<div class="container mt-4">
+
+
+   <div class="d-flex justify-content-between align-items-center mb-4">
+       <div>
+           <h2 class="mb-0"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</h2>
+           <p class="text-muted mb-0">Welcome back, {{ session["user_name"] }}!</p>
+       </div>
+   </div>
+
+
+   <!-- Portal Statistics -->
+   <div class="row g-3 mb-4">
+
+
+       <div class="col-md-4 col-sm-6">
+           <div class="card stat-card text-white bg-primary h-100">
+               <div class="card-body d-flex justify-content-between align-items-center">
+                   <div>
+                       <h6 class="card-title mb-1">Total Courses</h6>
+                       <h2 class="mb-0">{{ total_courses }}</h2>
+                   </div>
+                   <i class="bi bi-book fs-1 opacity-50"></i>
+               </div>
+               <div class="card-footer bg-transparent border-0">
+                   <a href="{{ url_for('courses') }}" class="text-white small">Manage &rarr;</a>
+               </div>
+           </div>
+       </div>
+
+
+       <div class="col-md-4 col-sm-6">
+           <div class="card stat-card text-white bg-success h-100">
+               <div class="card-body d-flex justify-content-between align-items-center">
+                   <div>
+                       <h6 class="card-title mb-1">Total Examinations</h6>
+                       <h2 class="mb-0">{{ total_examinations }}</h2>
+                   </div>
+                   <i class="bi bi-clipboard2-check fs-1 opacity-50"></i>
+               </div>
+               <div class="card-footer bg-transparent border-0">
+                   <a href="{{ url_for('examinations') }}" class="text-white small">Manage &rarr;</a>
+               </div>
+           </div>
+       </div>
+
+
+       <div class="col-md-4 col-sm-6">
+           <div class="card stat-card text-white bg-info h-100">
+               <div class="card-body d-flex justify-content-between align-items-center">
+                   <div>
+                       <h6 class="card-title mb-1">Total Examiners</h6>
+                       <h2 class="mb-0">{{ total_examiners }}</h2>
+                   </div>
+                   <i class="bi bi-person-badge fs-1 opacity-50"></i>
+               </div>
+               <div class="card-footer bg-transparent border-0">
+                   <a href="{{ url_for('admin_users') }}" class="text-white small">Manage &rarr;</a>
+               </div>
+           </div>
+       </div>
+
+
+       <div class="col-md-4 col-sm-6">
+           <div class="card stat-card text-white bg-secondary h-100">
+               <div class="card-body d-flex justify-content-between align-items-center">
+                   <div>
+                       <h6 class="card-title mb-1">Total Students</h6>
+                       <h2 class="mb-0">{{ total_students }}</h2>
+                   </div>
+                   <i class="bi bi-people fs-1 opacity-50"></i>
+               </div>
+               <div class="card-footer bg-transparent border-0">
+                   <a href="{{ url_for('admin_users') }}" class="text-white small">Manage &rarr;</a>
+               </div>
+           </div>
+       </div>
+
+
+       <div class="col-md-4 col-sm-6">
+           <div class="card stat-card text-white bg-warning h-100">
+               <div class="card-body d-flex justify-content-between align-items-center">
+                   <div>
+                       <h6 class="card-title mb-1">Total Slots</h6>
+                       <h2 class="mb-0">{{ total_slots }}</h2>
+                   </div>
+                   <i class="bi bi-calendar-week fs-1 opacity-50"></i>
+               </div>
+               <div class="card-footer bg-transparent border-0">
+                   <a href="{{ url_for('admin_slots') }}" class="text-white small">Manage &rarr;</a>
+               </div>
+           </div>
+       </div>
+
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-</head>
+       <div class="col-md-4 col-sm-6">
+           <div class="card stat-card text-white bg-danger h-100">
+               <div class="card-body d-flex justify-content-between align-items-center">
+                   <div>
+                       <h6 class="card-title mb-1">Total Bookings</h6>
+                       <h2 class="mb-0">{{ total_bookings }}</h2>
+                   </div>
+                   <i class="bi bi-journal-bookmark fs-1 opacity-50"></i>
+               </div>
+               <div class="card-footer bg-transparent border-0">
+                   <a href="{{ url_for('admin_bookings') }}" class="text-white small">Manage &rarr;</a>
+               </div>
+           </div>
+       </div>
+
+
+   </div>
+
+
+   <!-- Advanced Feature Hub -->
+   <div class="row g-3 mb-4">
+       <div class="col-md-3 col-sm-6">
+           <div class="card shadow-sm border h-100 bg-white">
+               <div class="card-body p-3 text-center">
+                   <i class="bi bi-person-check-fill text-primary fs-3 d-block mb-1"></i>
+                   <h6 class="fw-bold mb-1">Examiner Tracking</h6>
+                   <p class="small text-muted mb-2">Track progress & average grading charts.</p>
+                   <a href="{{ url_for('admin_examiner_analytics') }}" class="btn btn-outline-primary btn-sm w-100">View Tracking</a>
+               </div>
+           </div>
+       </div>
+       <div class="col-md-3 col-sm-6">
+           <div class="card shadow-sm border h-100 bg-white">
+               <div class="card-body p-3 text-center">
+                   <i class="bi bi-graph-up-arrow text-success fs-3 d-block mb-1"></i>
+                   <h6 class="fw-bold mb-1">Student Analytics</h6>
+                   <p class="small text-muted mb-2">Averages, highest marks & trends.</p>
+                   <a href="{{ url_for('performance_analytics') }}" class="btn btn-outline-success btn-sm w-100">View Analytics</a>
+               </div>
+           </div>
+       </div>
+       <div class="col-md-3 col-sm-6">
+           <div class="card shadow-sm border h-100 bg-white">
+               <div class="card-body p-3 text-center">
+                   <i class="bi bi-megaphone-fill text-warning fs-3 d-block mb-1"></i>
+                   <h6 class="fw-bold mb-1">Announcements</h6>
+                   <p class="small text-muted mb-2">Broadcast notices to calendar.</p>
+                   <a href="{{ url_for('admin_announcements') }}" class="btn btn-outline-warning btn-sm w-100">Manage Notices</a>
+               </div>
+           </div>
+       </div>
+       <div class="col-md-3 col-sm-6">
+           <div class="card shadow-sm border h-100 bg-white">
+               <div class="card-body p-3 text-center">
+                   <i class="bi bi-cloud-arrow-up text-info fs-3 d-block mb-1"></i>
+                   <h6 class="fw-bold mb-1">Bulk CSV Import</h6>
+                   <p class="small text-muted mb-2">Auto-add students to database.</p>
+                   <a href="{{ url_for('admin_users') }}" class="btn btn-outline-info btn-sm w-100">Import Students</a>
+               </div>
+           </div>
+       </div>
+   </div>
+
+
+   <!-- Pending Approvals Alert -->
+   {% if pending_examiners %}
+   <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+       <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+       <div>
+           <strong>{{ pending_examiners | length }} examiner(s) pending approval.</strong>
+           See the table below to approve them.
+       </div>
+   </div>
+   {% endif %}
+
+
+   <!-- Pending Examiner Approvals -->
+   <div class="card mb-4">
+       <div class="card-header d-flex justify-content-between align-items-center">
+           <h5 class="mb-0"><i class="bi bi-person-check me-2"></i>Pending Examiner Approvals</h5>
+           {% if pending_examiners %}
+               <span class="badge bg-warning text-dark">{{ pending_examiners | length }} pending</span>
+           {% endif %}
+       </div>
+       <div class="card-body">
+           {% if pending_examiners %}
+           <div class="table-responsive">
+               <table class="table table-hover mb-0">
+                   <thead class="table-light">
+                       <tr>
+                           <th>ID</th>
+                           <th>Name</th>
+                           <th>Email</th>
+                           <th>Action</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       {% for examiner in pending_examiners %}
+                       <tr>
+                           <td>{{ examiner.id }}</td>
+                           <td>{{ examiner.name }}</td>
+                           <td>{{ examiner.email }}</td>
+                           <td>
+                               <form method="POST" action="{{ url_for('approve_examiner', user_id=examiner.id) }}" style="display:inline;">
+                                   <button type="submit" class="btn btn-success btn-sm">
+                                       <i class="bi bi-check-lg"></i> Approve
+                                   </button>
+                               </form>
+                           </td>
+                       </tr>
+                       {% endfor %}
+                   </tbody>
+               </table>
+           </div>
+           {% else %}
+           <p class="text-muted mb-0"><i class="bi bi-check-circle me-1"></i>No pending approvals.</p>
+           {% endif %}
+       </div>
+   </div>
+
+
+   <!-- Approved Examiners -->
+   <div class="card mb-4">
+       <div class="card-header d-flex justify-content-between align-items-center">
+           <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i>Approved Examiners</h5>
+           {% if approved_examiners %}
+               <span class="badge bg-success">{{ approved_examiners | length }} active</span>
+           {% endif %}
+       </div>
+       <div class="card-body">
+           {% if approved_examiners %}
+           <div class="table-responsive">
+               <table class="table table-hover mb-0">
+                   <thead class="table-light">
+                       <tr>
+                           <th>ID</th>
+                           <th>Name</th>
+                           <th>Email</th>
+                           <th>Action</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       {% for examiner in approved_examiners %}
+                       <tr>
+                           <td>{{ examiner.id }}</td>
+                           <td>{{ examiner.name }}</td>
+                           <td>{{ examiner.email }}</td>
+                           <td>
+                               <form method="POST" action="{{ url_for('deactivate_examiner', user_id=examiner.id) }}" style="display:inline;">
+                                   <button type="submit" class="btn btn-outline-danger btn-sm">
+                                       <i class="bi bi-person-dash"></i> Deactivate
+                                   </button>
+                               </form>
+                           </td>
+                       </tr>
+                       {% endfor %}
+                   </tbody>
+               </table>
+           </div>
+           {% else %}
+           <p class="text-muted mb-0">No approved active examiners.</p>
+           {% endif %}
+       </div>
+   </div>
+
+
+   <!-- Deactivated Examiners -->
+   <div class="card mb-4">
+       <div class="card-header d-flex justify-content-between align-items-center">
+           <h5 class="mb-0"><i class="bi bi-person-x me-2"></i>Deactivated Examiners</h5>
+           {% if inactive_examiners %}
+               <span class="badge bg-secondary">{{ inactive_examiners | length }}</span>
+           {% endif %}
+       </div>
+       <div class="card-body">
+           {% if inactive_examiners %}
+           <div class="table-responsive">
+               <table class="table table-hover mb-0">
+                   <thead class="table-light">
+                       <tr>
+                           <th>ID</th>
+                           <th>Name</th>
+                           <th>Email</th>
+                           <th>Action</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       {% for examiner in inactive_examiners %}
+                       <tr>
+                           <td>{{ examiner.id }}</td>
+                           <td>{{ examiner.name }}</td>
+                           <td>{{ examiner.email }}</td>
+                           <td>
+                               <form method="POST" action="{{ url_for('reactivate_examiner', user_id=examiner.id) }}" style="display:inline;">
+                                   <button type="submit" class="btn btn-outline-primary btn-sm">
+                                       <i class="bi bi-person-check"></i> Reactivate
+                                   </button>
+                               </form>
+                           </td>
+                       </tr>
+                       {% endfor %}
+                   </tbody>
+               </table>
+           </div>
+           {% else %}
+           <p class="text-muted mb-0">No deactivated examiners.</p>
+           {% endif %}
+       </div>
+   </div>
 
-<body class="bg-light">
-
-<div class="container mt-5">
-
-    <!-- Dashboard Heading -->
-    <h2>Admin Dashboard</h2>
-
-    <p>Welcome, {{ session["user_name"] }}!</p>
-
-    <hr>
-
-    <!-- Portal Statistics -->
-    <h4 class="mb-3">Portal Statistics</h4>
-
-    <div class="row">
-
-        <div class="col-md-4 mb-3">
-            <div class="card p-3 shadow-sm">
-                <h5>Total Courses</h5>
-                <h2>{{ total_courses }}</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="card p-3 shadow-sm">
-                <h5>Total Examinations</h5>
-                <h2>{{ total_examinations }}</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="card p-3 shadow-sm">
-                <h5>Total Examiners</h5>
-                <h2>{{ total_examiners }}</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="card p-3 shadow-sm">
-                <h5>Total Students</h5>
-                <h2>{{ total_students }}</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="card p-3 shadow-sm">
-                <h5>Total Examination Slots</h5>
-                <h2>{{ total_slots }}</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="card p-3 shadow-sm">
-                <h5>Total Bookings</h5>
-                <h2>{{ total_bookings }}</h2>
-            </div>
-        </div>
-
-    </div>
-
-    <hr>
-
-    <!-- Pending Examiner Approvals -->
-    <h4 class="mb-3">Pending Examiner Approvals</h4>
-
-    {% if pending_examiners %}
-
-    <div class="table-responsive">
-
-        <table class="table table-bordered table-striped">
-
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for examiner in pending_examiners %}
-
-                <tr>
-                    <td>{{ examiner.id }}</td>
-                    <td>{{ examiner.name }}</td>
-                    <td>{{ examiner.email }}</td>
-
-                    <td>
-                        <form method="POST"
-                              action="{{ url_for('approve_examiner', user_id=examiner.id) }}">
-
-                            <button type="submit"
-                                    class="btn btn-success btn-sm">
-                                Approve
-                            </button>
-
-                        </form>
-                    </td>
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-    {% else %}
-
-    <p class="text-muted">No pending examiner approvals.</p>
-
-    {% endif %}
-
-    <hr>
-
-    <!-- Approved Examiners -->
-    <h4 class="mb-3">Approved Examiners</h4>
-
-    {% if approved_examiners %}
-
-    <div class="table-responsive">
-
-        <table class="table table-bordered table-striped">
-
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for examiner in approved_examiners %}
-
-                <tr>
-                    <td>{{ examiner.id }}</td>
-                    <td>{{ examiner.name }}</td>
-                    <td>{{ examiner.email }}</td>
-
-                    <td>
-                        <form method="POST"
-                              action="{{ url_for('deactivate_examiner', user_id=examiner.id) }}">
-
-                            <button type="submit"
-                                    class="btn btn-danger btn-sm">
-                                Deactivate
-                            </button>
-
-                        </form>
-                    </td>
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-    {% else %}
-
-    <p class="text-muted">No approved active examiners.</p>
-
-    {% endif %}
-
-    <hr>
-
-    <!-- Deactivated Examiners -->
-    <h4 class="mb-3">Deactivated Examiners</h4>
-
-    {% if inactive_examiners %}
-
-    <div class="table-responsive">
-
-        <table class="table table-bordered table-striped">
-
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for examiner in inactive_examiners %}
-
-                <tr>
-                    <td>{{ examiner.id }}</td>
-                    <td>{{ examiner.name }}</td>
-                    <td>{{ examiner.email }}</td>
-
-                    <td>
-                        <form method="POST"
-                              action="{{ url_for('reactivate_examiner', user_id=examiner.id) }}">
-
-                            <button type="submit"
-                                    class="btn btn-primary btn-sm">
-                                Reactivate
-                            </button>
-
-                        </form>
-                    </td>
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-    {% else %}
-
-    <p class="text-muted">No deactivated examiners.</p>
-
-    {% endif %}
-
-    <hr>
-
-    <!-- Manage -->
-    <a href="{{ url_for('courses') }}" class="btn btn-primary">
-    Manage Courses
-    </a>
-
-    <a href="{{ url_for('examinations') }}" class="btn btn-primary">
-    Manage Examinations
-    </a>
-
-    <a href="{{ url_for('admin_slots') }}"
-    class="btn btn-primary">
-    Manage Slots
-    </a>
-
-    <a href="{{ url_for('admin_bookings') }}"
-    class="btn btn-primary">
-    Manage Bookings
-    </a>
-
-    <a href="{{ url_for('admin_users') }}"
-    class="btn btn-primary">
-    Manage Students and Examiners
-    </a>
-
-    <!-- Logout -->
-    <a href="{{ url_for('logout') }}" class="btn btn-danger mb-4">
-        Logout
-    </a>
 
 </div>
-
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Resources – {{ course.name }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <!-- Breadcrumb & Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-folder2-open me-2 text-primary"></i>Course Resources Management</h2>
+            <p class="text-muted mb-0">Course: <strong>{{ course.name }}</strong></p>
+        </div>
+        <div>
+            <a href="{{ url_for('courses') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Back to Courses
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Add Resource Form -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm border">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-plus-circle me-2"></i>Add New Resource Link</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('course_resources', course_id=course.id) }}">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Resource Title <span class="text-danger">*</span></label>
+                            <input type="text" name="title" class="form-control" placeholder="e.g. Lecture Notes, Syllabus, Reference Paper" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Resource URL / Link <span class="text-danger">*</span></label>
+                            <input type="url" name="url" class="form-control" placeholder="https://..." required>
+                            <div class="form-text">Must be a valid URL starting with http:// or https://</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description / Notes</label>
+                            <textarea name="description" class="form-control" rows="3" placeholder="Brief details about what students will find in this resource..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                            <i class="bi bi-upload me-1"></i> Publish Resource for Students
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Existing Resources List -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm border">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-collection me-2 text-primary"></i>Current Resources</h5>
+                    <span class="badge bg-primary rounded-pill">{{ course.resources|length }}</span>
+                </div>
+                <div class="card-body p-0">
+                    {% if course.resources %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Resource Details</th>
+                                    <th>Added On</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for r in course.resources %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold text-dark">
+                                            <i class="bi bi-link-45deg text-primary me-1"></i>{{ r.title }}
+                                        </div>
+                                        {% if r.description %}
+                                        <div class="small text-muted mb-1">{{ r.description }}</div>
+                                        {% endif %}
+                                        <a href="{{ r.url }}" target="_blank" class="small text-decoration-none text-primary">
+                                            <i class="bi bi-box-arrow-up-right me-1"></i>{{ r.url }}
+                                        </a>
+                                    </td>
+                                    <td class="small text-muted">{{ r.created_at or '-' }}</td>
+                                    <td class="text-end">
+                                        <form method="POST" action="{{ url_for('delete_course_resource', resource_id=r.id) }}" onsubmit="return confirm('Are you sure you want to delete this resource?');" style="display: inline;">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="p-4 text-center text-muted">
+                        <i class="bi bi-folder2-open display-6 d-block mb-2 text-secondary"></i>
+                        <p class="mb-0">No resources have been added for this course yet.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
