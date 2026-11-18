@@ -1,47 +1,81 @@
 {% extends "base.html" %}
 
+{% block title %}Examination History &middot; Student Portal{% endblock %}
+
 {% block content %}
-
-<div class="container mt-4">
-
-    <h2>Examination History</h2>
-
-    {% if bookings %}
-
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-
-            <thead>
-                <tr>
-                    <th>Booking ID</th>
-                    <th>Examination</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for booking in bookings %}
-                <tr>
-                    <td>{{ booking.id }}</td>
-                    <td>{{ booking.slot.examination.name }}</td>
-                    <td>{{ booking.slot.date }}</td>
-                    <td>{{ booking.slot.time }}</td>
-                    <td>{{ booking.status }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-
-        </table>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-clock-history me-2 text-gold"></i>Student Examination History</h2>
+                <p>Complete historical transcript of all previous examination bookings, sessions, and outcomes.</p>
+            </div>
+            <div>
+                <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Dashboard
+                </a>
+            </div>
+        </div>
     </div>
 
-    {% else %}
-
-        <p>No examination history is available.</p>
-
-    {% endif %}
-
+    <div class="card shadow-sm" style="border-top: 4px solid var(--maroon);">
+        <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-archive-fill me-2 text-gold"></i>Historical Booking Log</span>
+            <span class="badge bg-gold text-dark">{{ bookings|length }} Records</span>
+        </div>
+        <div class="card-body p-0">
+            {% if bookings %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Booking #</th>
+                            <th>Examination Title</th>
+                            <th>Course</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td class="fw-bold text-muted">#{{ booking.id }}</td>
+                            <td>
+                                <span class="fw-bold text-dark">{{ booking.slot.examination.name }}</span>
+                            </td>
+                            <td>
+                                <i class="bi bi-book text-maroon me-1"></i>{{ booking.slot.examination.course.name if booking.slot.examination.course else '' }}
+                            </td>
+                            <td>
+                                <i class="bi bi-calendar3 text-maroon me-1"></i>{{ booking.slot.date }}
+                            </td>
+                            <td>
+                                <span class="badge font-monospace" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1px solid rgba(139,46,36,0.2);">
+                                    <i class="bi bi-clock me-1"></i>{{ booking.slot.time }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                {% if booking.status == 'Evaluated' or booking.status == 'Completed' %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>{{ booking.status }}</span>
+                                {% elif booking.status == 'Cancelled' %}
+                                <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Cancelled</span>
+                                {% else %}
+                                <span class="badge bg-gold text-dark">{{ booking.status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-clock-history display-5 d-block mb-2 text-secondary"></i>
+                <p class="mb-0">No past examination records found.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
-
 {% endblock %}

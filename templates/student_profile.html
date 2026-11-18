@@ -1,40 +1,44 @@
 {% extends "base.html" %}
 
-{% block title %}My Student Profile – Exam Portal{% endblock %}
+{% block title %}My Student Profile &middot; Exam Portal{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <div>
-            <h2 class="fw-bold mb-1"><i class="bi bi-person-circle me-2 text-primary"></i>My Student Profile</h2>
-            <p class="text-muted mb-0">Official academic credentials and contact information registered in college records.</p>
-        </div>
-        <div>
-            <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i> Dashboard
-            </a>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-person-circle me-2 text-gold"></i>Student Academic Profile</h2>
+                <p>Official institutional credentials, roll number, and student contact information.</p>
+            </div>
+            <div>
+                <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Dashboard
+                </a>
+            </div>
         </div>
     </div>
 
     <div class="row g-4">
-        <!-- Profile Overview Card -->
         <div class="col-lg-4">
-            <div class="card shadow-sm border text-center p-4 h-100 bg-white">
-                <div class="rounded-circle bg-primary-subtle text-primary mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2.2rem;">
+            <div class="card shadow-sm text-center p-4 h-100 bg-white" style="border-top: 4px solid var(--maroon);">
+                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 shadow-sm"
+                    style="width: 80px; height: 80px; background-color: var(--maroon-subtle); border: 2.5px solid var(--maroon); color: var(--maroon); font-size: 2.2rem;">
                     <i class="bi bi-person-fill"></i>
                 </div>
                 <h4 class="fw-bold text-dark mb-1">{{ student.name }}</h4>
-                <div class="badge bg-primary fs-6 py-2 px-3 mb-3">{{ profile.roll_number or 'ROLL-NOT-SET' }}</div>
-                
+                <div class="badge bg-gold text-dark fs-6 py-2 px-3 mb-3 font-monospace shadow-sm">
+                    <i class="bi bi-person-vcard me-1"></i>{{ profile.roll_number or 'ROLL-NOT-SET' }}
+                </div>
+
                 <ul class="list-group list-group-flush text-start small border-top pt-2">
                     <li class="list-group-item d-flex justify-content-between px-0">
                         <span class="text-muted">Account Role:</span>
-                        <span class="fw-semibold">{{ student.role }}</span>
+                        <span class="fw-semibold text-maroon">{{ student.role }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between px-0">
                         <span class="text-muted">Department:</span>
-                        <span class="fw-semibold text-end">{{ profile.department or 'Data Science & Applications' }}</span>
+                        <span class="fw-semibold text-end">{{ profile.department or 'Data Science & Applications'
+                            }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between px-0">
                         <span class="text-muted">Academic Year:</span>
@@ -42,90 +46,102 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between px-0">
                         <span class="text-muted">Account Status:</span>
-                        <span class="badge bg-success">Active & Verified</span>
+                        <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Active &amp;
+                            Verified</span>
                     </li>
                 </ul>
             </div>
         </div>
 
-        <!-- Editable Profile Information Form -->
         <div class="col-lg-8">
-            <div class="card shadow-sm border bg-white">
-                <div class="card-header bg-white py-3 border-bottom">
-                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-sliders me-2 text-primary"></i>Edit Personal & Contact Details</h5>
+            <div class="card shadow-sm bg-white" style="border-top: 4px solid var(--gold);">
+                <div class="card-header card-header-maroon">
+                    <i class="bi bi-sliders me-2 text-gold"></i>Edit Personal &amp; Contact Information
                 </div>
                 <div class="card-body p-4">
                     <form method="POST">
                         <div class="row g-3">
-                            <!-- Roll Number (Institutional Identifier) -->
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Permanent Roll Number</label>
+                                <label class="form-label">Permanent University Roll Number</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light"><i class="bi bi-person-badge"></i></span>
-                                    <input type="text" class="form-control bg-light" value="{{ profile.roll_number or '' }}" readonly>
+                                    <span class="input-group-text bg-light"><i
+                                            class="bi bi-person-badge text-maroon"></i></span>
+                                    <input type="text" class="form-control bg-light font-monospace"
+                                        value="{{ profile.roll_number or '' }}" readonly>
                                 </div>
-                                <div class="form-text">Assigned by institutional registrar.</div>
+                                <div class="form-text small">Assigned by institutional registrar.</div>
                             </div>
 
-                            <!-- Registered Email -->
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">College Email Address</label>
+                                <label class="form-label">University Email Address</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
-                                    <input type="email" class="form-control bg-light" value="{{ student.email }}" readonly>
+                                    <span class="input-group-text bg-light"><i
+                                            class="bi bi-envelope text-maroon"></i></span>
+                                    <input type="email" class="form-control bg-light" value="{{ student.email }}"
+                                        readonly>
                                 </div>
-                                <div class="form-text">Primary login credential.</div>
+                                <div class="form-text small">Primary system login credential.</div>
                             </div>
 
-                            <!-- Full Name -->
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                                <label class="form-label">Full Name <span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control" value="{{ student.name }}" required>
                             </div>
 
-                            <!-- Phone Number -->
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Contact / Mobile Phone</label>
-                                <input type="tel" name="phone" class="form-control" value="{{ profile.phone or '' }}" placeholder="e.g. 9876543210">
+                                <label class="form-label">Contact / Mobile Phone</label>
+                                <input type="tel" name="phone" class="form-control" value="{{ profile.phone or '' }}"
+                                    placeholder="e.g. 9876543210">
                             </div>
 
-                            <!-- Department -->
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Academic Department</label>
+                                <label class="form-label">Academic Department</label>
                                 <select name="department" class="form-select">
-                                    <option value="Data Science and Applications" {% if profile.department == 'Data Science and Applications' %}selected{% endif %}>Data Science and Applications</option>
-                                    <option value="Computer Science & Engineering" {% if profile.department == 'Computer Science & Engineering' %}selected{% endif %}>Computer Science & Engineering</option>
-                                    <option value="Electrical Engineering" {% if profile.department == 'Electrical Engineering' %}selected{% endif %}>Electrical Engineering</option>
-                                    <option value="Mechanical Engineering" {% if profile.department == 'Mechanical Engineering' %}selected{% endif %}>Mechanical Engineering</option>
-                                    <option value="Civil Engineering" {% if profile.department == 'Civil Engineering' %}selected{% endif %}>Civil Engineering</option>
+                                    <option value="Data Science and Applications" {% if
+                                        profile.department=='Data Science and Applications' %}selected{% endif %}>Data
+                                        Science and Applications</option>
+                                    <option value="Computer Science & Engineering" {% if
+                                        profile.department=='Computer Science & Engineering' %}selected{% endif %}>
+                                        Computer Science &amp; Engineering</option>
+                                    <option value="Psychology Major" {% if profile.department=='Psychology Major'
+                                        %}selected{% endif %}>Psychology Major</option>
+                                    <option value="Politics Major" {% if profile.department=='Politics Major'
+                                        %}selected{% endif %}>Politics Major</option>
+                                    <option value="Economics Major" {% if profile.department=='Economics Major'
+                                        %}selected{% endif %}>Economics Major</option>
                                 </select>
                             </div>
 
-                            <!-- Academic Year -->
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Current Academic Year</label>
+                                <label class="form-label">Current Academic Year</label>
                                 <select name="year" class="form-select">
-                                    <option value="1st Year" {% if profile.year == '1st Year' %}selected{% endif %}>1st Year (Foundation)</option>
-                                    <option value="2nd Year" {% if profile.year == '2nd Year' %}selected{% endif %}>2nd Year (Diploma)</option>
-                                    <option value="3rd Year" {% if profile.year == '3rd Year' %}selected{% endif %}>3rd Year (Degree)</option>
-                                    <option value="4th Year" {% if profile.year == '4th Year' %}selected{% endif %}>4th Year (Advanced/BS)</option>
+                                    <option value="1st Year" {% if profile.year=='1st Year' %}selected{% endif %}>1st
+                                        Year </option>
+                                    <option value="2nd Year" {% if profile.year=='2nd Year' %}selected{% endif %}>2nd
+                                        Year </option>
+                                    <option value="3rd Year" {% if profile.year=='3rd Year' %}selected{% endif %}>3rd
+                                        Year </option>
+                                    <option value="4th Year" {% if profile.year=='4th Year' %}selected{% endif %}>4th
+                                        Year </option>
                                 </select>
                             </div>
 
-                            <!-- Change Password -->
                             <div class="col-12 mt-4 pt-3 border-top">
-                                <h6 class="fw-bold text-dark mb-2"><i class="bi bi-shield-lock me-2 text-primary"></i>Security & Password Reset</h6>
-                                <label class="form-label small text-muted">Leave blank if you do not want to alter your assigned password.</label>
+                                <h6 class="fw-bold text-maroon mb-1"><i
+                                        class="bi bi-shield-lock me-2 text-gold"></i>Security &amp; Password Update</h6>
+                                <p class="small text-muted mb-2">Leave blank if you wish to retain your currently
+                                    assigned login password.</p>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-key"></i></span>
-                                    <input type="password" name="new_password" class="form-control" placeholder="Enter new password (optional)">
+                                    <span class="input-group-text"><i class="bi bi-key text-maroon"></i></span>
+                                    <input type="password" name="new_password" class="form-control"
+                                        placeholder="Enter new password (optional)">
                                 </div>
                             </div>
                         </div>
 
                         <div class="mt-4 text-end">
-                            <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">
-                                <i class="bi bi-check2-circle me-1"></i> Save Profile Changes
+                            <button type="submit" class="btn btn-primary px-4 py-2">
+                                <i class="bi bi-check2-circle me-1"></i>Save Profile Changes
                             </button>
                         </div>
                     </form>

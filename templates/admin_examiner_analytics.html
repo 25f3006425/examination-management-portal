@@ -1,32 +1,31 @@
 {% extends "base.html" %}
 
-{% block title %}Examiner Progress & Grading Analytics – Admin Portal{% endblock %}
+{% block title %}Examiner Progress &amp; Grading Analytics &middot; Admin Portal{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <div>
-            <h2 class="fw-bold mb-1"><i class="bi bi-person-check me-2 text-primary"></i>Faculty Examiner Progress & Grading Tracking</h2>
-            <p class="text-muted mb-0">Monitor examiner evaluation completion rates, workload, and average grading distributions.</p>
-        </div>
-        <div>
-            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i> Dashboard
-            </a>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-person-check-fill me-2 text-gold"></i>Faculty Examiner Progress &amp; Grading Tracking</h2>
+                <p>Track faculty evaluation completion rates, assessment velocity, and grading distribution curves.</p>
+            </div>
+            <div>
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Dashboard
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Visual Charts (Chart.js) -->
     <div class="row g-4 mb-4">
-        <!-- Progress Bar Chart (Completed vs Pending) -->
         <div class="col-lg-7">
-            <div class="card shadow-sm border h-100">
-                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-hourglass-split me-2 text-primary"></i>Evaluation Progress (Completed vs Pending)</h5>
-                    <span class="badge bg-light text-muted border">Workload Status</span>
+            <div class="card h-100" style="border-top: 4px solid var(--maroon);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-bar-chart-fill me-2 text-gold"></i>Evaluation Throughput (Completed vs Pending)</span>
+                    <span class="badge bg-gold text-dark">Faculty Workload</span>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 bg-white">
                     {% if examiners_data %}
                     <div style="position: relative; height: 320px;">
                         <canvas id="examinerProgressChart"></canvas>
@@ -38,14 +37,13 @@
             </div>
         </div>
 
-        <!-- Average Marks Comparison Chart -->
         <div class="col-lg-5">
-            <div class="card shadow-sm border h-100">
-                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-bar-chart-steps me-2 text-primary"></i>Average Marks Awarded</h5>
-                    <span class="badge bg-light text-muted border">Grading Standard</span>
+            <div class="card h-100" style="border-top: 4px solid var(--gold);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-graph-up me-2 text-gold"></i>Average Marks Awarded</span>
+                    <span class="badge bg-gold text-dark">Grading Calibration</span>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 bg-white">
                     {% if examiners_data %}
                     <div style="position: relative; height: 320px;">
                         <canvas id="examinerGradingChart"></canvas>
@@ -58,25 +56,24 @@
         </div>
     </div>
 
-    <!-- Detailed Examiner Tracking Table -->
-    <div class="card shadow-sm border">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-table me-2 text-primary"></i>Examiner Performance & Status Table</h5>
-            <span class="badge bg-primary">{{ examiners_data|length }} Faculty Examiners</span>
+    <div class="card">
+        <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-table me-2 text-gold"></i>Examiner Grading Ledger &amp; Workload Metrics</span>
+            <span class="badge bg-gold text-dark">{{ examiners_data|length }} Faculty Evaluators</span>
         </div>
         <div class="card-body p-0">
             {% if examiners_data %}
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
-                            <th>Examiner Details</th>
+                            <th>Examiner Profile</th>
                             <th class="text-center">Slots Created</th>
                             <th class="text-center">Assigned Bookings</th>
-                            <th>Evaluation Progress</th>
-                            <th class="text-center">Avg Marks</th>
-                            <th class="text-center">Score Range (Min-Max)</th>
-                            <th class="text-center">Status</th>
+                            <th>Evaluation Completion</th>
+                            <th class="text-center">Avg Score</th>
+                            <th class="text-center">Range (Min - Max)</th>
+                            <th class="text-center">Evaluation State</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,40 +81,40 @@
                         <tr>
                             <td>
                                 <div class="fw-bold text-dark">{{ item.examiner.name }}</div>
-                                <div class="small text-muted">{{ item.examiner.email }}</div>
+                                <div class="small text-muted"><i class="bi bi-envelope me-1"></i>{{ item.examiner.email }}</div>
                                 {% if item.examiner.examiner_profile and item.examiner.examiner_profile.specialization %}
-                                <div class="small text-secondary"><i class="bi bi-bookmark me-1"></i>{{ item.examiner.examiner_profile.specialization }}</div>
+                                <div class="small text-secondary"><i class="bi bi-mortarboard me-1"></i>{{ item.examiner.examiner_profile.specialization }}</div>
                                 {% endif %}
                             </td>
                             <td class="text-center fw-semibold">{{ item.slots_count }}</td>
                             <td class="text-center fw-semibold">{{ item.bookings_count }}</td>
                             <td style="min-width: 200px;">
                                 <div class="d-flex justify-content-between small mb-1">
-                                    <span><strong>{{ item.completed_count }}</strong> completed</span>
+                                    <span><strong class="text-maroon">{{ item.completed_count }}</strong> evaluated</span>
                                     <span class="text-muted">{{ item.pending_count }} pending</span>
                                 </div>
-                                <div class="progress" style="height: 8px;">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ item.completion_pct }}%;" aria-valuenow="{{ item.completion_pct }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress" style="height: 8px; background-color: #E5E7EB;">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ item.completion_pct }}%; background-color: var(--maroon);" aria-valuenow="{{ item.completion_pct }}" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
-                                <div class="text-end small text-muted mt-1">{{ item.completion_pct }}% done</div>
+                                <div class="text-end small text-muted mt-1 fw-semibold">{{ item.completion_pct }}% complete</div>
                             </td>
                             <td class="text-center">
-                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 fs-6">
+                                <span class="badge px-3 py-2 fs-6 font-monospace" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1.5px solid rgba(139,46,36,0.3);">
                                     {{ item.avg_marks }}
                                 </span>
                             </td>
-                            <td class="text-center small">
+                            <td class="text-center small font-monospace">
                                 {% if item.completed_count > 0 %}
-                                <span class="text-muted">{{ item.lowest_marks }}</span> - <span class="fw-bold text-success">{{ item.highest_marks }}</span>
+                                <span class="text-muted">{{ item.lowest_marks }}</span> &ndash; <span class="fw-bold text-maroon">{{ item.highest_marks }}</span>
                                 {% else %}
-                                <span class="text-muted">-</span>
+                                <span class="text-muted">&mdash;</span>
                                 {% endif %}
                             </td>
                             <td class="text-center">
                                 {% if item.pending_count == 0 and item.completed_count > 0 %}
-                                <span class="badge bg-success"><i class="bi bi-check-all me-1"></i>Up to date</span>
+                                <span class="badge bg-success"><i class="bi bi-check-all me-1"></i>All Evaluated</span>
                                 {% elif item.pending_count > 0 %}
-                                <span class="badge bg-warning text-dark"><i class="bi bi-clock me-1"></i>{{ item.pending_count }} Pending</span>
+                                <span class="badge bg-gold text-dark"><i class="bi bi-clock-history me-1"></i>{{ item.pending_count }} Pending</span>
                                 {% else %}
                                 <span class="badge bg-secondary">No Bookings</span>
                                 {% endif %}
@@ -129,8 +126,8 @@
             </div>
             {% else %}
             <div class="p-5 text-center text-muted">
-                <i class="bi bi-people display-4 d-block mb-2"></i>
-                No examiners found in the system.
+                <i class="bi bi-people display-4 d-block mb-2 text-secondary"></i>
+                No examiners recorded in the system.
             </div>
             {% endif %}
         </div>
@@ -147,7 +144,7 @@
         const pendingCounts = [{% for item in examiners_data %}{{ item.pending_count }},{% endfor %}];
         const avgScores = [{% for item in examiners_data %}{{ item.avg_marks }},{% endfor %}];
 
-        // Chart 1: Progress (Completed vs Pending)
+        // Chart 1: Progress (Heritage Maroon & Gold)
         const progressCtx = document.getElementById('examinerProgressChart').getContext('2d');
         new Chart(progressCtx, {
             type: 'bar',
@@ -155,15 +152,15 @@
                 labels: examinerNames,
                 datasets: [
                     {
-                        label: 'Completed Evaluations',
+                        label: 'Evaluations Completed',
                         data: completedCounts,
-                        backgroundColor: '#198754',
+                        backgroundColor: '#8B2E24',
                         borderRadius: 4
                     },
                     {
-                        label: 'Pending Evaluations',
+                        label: 'Evaluations Pending',
                         data: pendingCounts,
-                        backgroundColor: '#ffc107',
+                        backgroundColor: '#D4A017',
                         borderRadius: 4
                     }
                 ]
@@ -181,7 +178,7 @@
             }
         });
 
-        // Chart 2: Average Grading Standards
+        // Chart 2: Average Score Calibration (Deep Maroon)
         const gradingCtx = document.getElementById('examinerGradingChart').getContext('2d');
         new Chart(gradingCtx, {
             type: 'bar',
@@ -190,8 +187,8 @@
                 datasets: [{
                     label: 'Average Score Awarded',
                     data: avgScores,
-                    backgroundColor: 'rgba(13, 110, 253, 0.75)',
-                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(139, 46, 36, 0.85)',
+                    borderColor: '#6E2219',
                     borderWidth: 1.5,
                     borderRadius: 6
                 }]

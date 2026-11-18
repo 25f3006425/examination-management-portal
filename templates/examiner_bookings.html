@@ -1,37 +1,82 @@
 {% extends "base.html" %}
 
+{% block title %}Student Evaluations &middot; Faculty Portal{% endblock %}
+
 {% block content %}
-
-<div class="container mt-4">
-
-    <h2>Booked Students</h2>
-
-    <table class="table table-bordered">
-        <tr>
-            <th>Student Name</th>
-            <th>Examination</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Action</th>
-        </tr>
-
-        {% for booking in bookings %}
-        <tr>
-            <td>{{ booking.student.name }}</td>
-            <td>{{ booking.slot.examination.name }}</td>
-            <td>{{ booking.slot.date }}</td>
-            <td>{{ booking.slot.time }}</td>
-            <td>
-                <a href="{{ url_for('evaluate_student', booking_id=booking.id) }}"
-                   class="btn btn-primary btn-sm">
-                    Evaluate
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-pencil-square me-2 text-gold"></i>Student Viva Evaluation Desk</h2>
+                <p>Review student bookings, record assessment criteria scores, and submit final marks.</p>
+            </div>
+            <div>
+                <a href="{{ url_for('examiner_dashboard') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Dashboard
                 </a>
-            </td>
-        </tr>
-        {% endfor %}
+            </div>
+        </div>
+    </div>
 
-    </table>
-
+    <div class="card shadow-sm">
+        <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-people-fill me-2 text-gold"></i>Booked Candidates for Evaluation</span>
+            <span class="badge bg-gold text-dark">{{ bookings|length }} Students</span>
+        </div>
+        <div class="card-body p-0">
+            {% if bookings %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Student Information</th>
+                            <th>Examination</th>
+                            <th>Session Date &amp; Time</th>
+                            <th class="text-center">Current Status</th>
+                            <th class="text-end pe-3" style="width: 140px;">Evaluation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>
+                                <div class="fw-bold text-dark">{{ booking.student.name }}</div>
+                                <div class="small text-muted"><i class="bi bi-envelope me-1"></i>{{ booking.student.email }}</div>
+                            </td>
+                            <td>
+                                <span class="fw-semibold">{{ booking.slot.examination.name }}</span>
+                                <div class="small text-muted">{{ booking.slot.examination.course.name if booking.slot.examination.course else '' }}</div>
+                            </td>
+                            <td>
+                                <div><i class="bi bi-calendar3 text-maroon me-1"></i>{{ booking.slot.date }}</div>
+                                <span class="badge font-monospace mt-1" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1px solid rgba(139,46,36,0.2);">
+                                    <i class="bi bi-clock me-1"></i>{{ booking.slot.time }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                {% if booking.status == 'Evaluated' or booking.status == 'Completed' %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Evaluated</span>
+                                {% else %}
+                                <span class="badge bg-gold text-dark"><i class="bi bi-clock-history me-1"></i>{{ booking.status or 'Booked' }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end pe-3">
+                                <a href="{{ url_for('evaluate_student', booking_id=booking.id) }}" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-pencil-fill me-1"></i>Evaluate
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-person-check display-5 d-block mb-2 text-secondary"></i>
+                <p class="mb-0">No active student bookings assigned to evaluate at this time.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
-
 {% endblock %}

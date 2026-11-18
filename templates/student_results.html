@@ -1,44 +1,44 @@
 {% extends "base.html" %}
 
-{% block title %}My Examination Results & Reports – Student Portal{% endblock %}
+{% block title %}My Examination Results &amp; Transcripts &middot; Student Portal{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <div>
-            <h2 class="fw-bold mb-1"><i class="bi bi-award me-2 text-primary"></i>My Examination Results & Official Reports</h2>
-            <p class="text-muted mb-0">View certified grades, rubric breakdowns, examiner feedback, and download PDF transcripts.</p>
-        </div>
-        <div class="d-flex gap-2">
-            <a href="{{ url_for('performance_analytics') }}" class="btn btn-outline-primary">
-                <i class="bi bi-graph-up me-1"></i> Performance Analytics
-            </a>
-            <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i> Dashboard
-            </a>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-award-fill me-2 text-gold"></i>Official Academic Examination Results</h2>
+                <p>Verified scores, criterion-wise rubric breakdowns, and faculty remarks.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('performance_analytics') }}" class="btn btn-gold btn-sm">
+                    <i class="bi bi-graph-up me-1"></i>My Analytics
+                </a>
+                <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Dashboard
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Results Table Card -->
-    <div class="card shadow-sm border bg-white">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-file-earmark-check me-2 text-primary"></i>Official Transcripts</h5>
-            <span class="badge bg-primary rounded-pill">{{ evaluations|length }} Published Results</span>
+    <div class="card shadow-sm" style="border-top: 4px solid var(--maroon);">
+        <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-file-earmark-check-fill me-2 text-gold"></i>Official Published Results Ledger</span>
+            <span class="badge bg-gold text-dark">{{ evaluations|length }} Results</span>
         </div>
         <div class="card-body p-0">
             {% if evaluations %}
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th>Examination Details</th>
                             <th>Course</th>
-                            <th>Slot Date & Time</th>
-                            <th>Examiner</th>
+                            <th>Session Date &amp; Time</th>
+                            <th>Faculty Examiner</th>
                             <th class="text-center">Score Awarded</th>
-                            <th>Feedback & Remarks</th>
-                            <th class="text-end">Official Report</th>
+                            <th>Feedback Remarks</th>
+                            <th class="text-end pe-3" style="width: 170px;">Official Transcript</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,33 +46,28 @@
                         <tr>
                             <td>
                                 <div class="fw-bold text-dark fs-6">{{ ev.booking.slot.examination.name }}</div>
-                                <span class="badge bg-success-subtle text-success border border-success">
-                                    <i class="bi bi-check-circle me-1"></i>Completed
-                                </span>
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Certified</span>
                             </td>
-                            <td>{{ ev.booking.slot.examination.course.name }}</td>
                             <td>
-                                <div><i class="bi bi-calendar3 me-1"></i>{{ ev.booking.slot.date }}</div>
+                                <i class="bi bi-book text-maroon me-1"></i>{{ ev.booking.slot.examination.course.name }}
+                            </td>
+                            <td>
+                                <div><i class="bi bi-calendar3 text-maroon me-1"></i>{{ ev.booking.slot.date }}</div>
                                 <small class="text-muted"><i class="bi bi-clock me-1"></i>{{ ev.booking.slot.time }}</small>
                             </td>
                             <td class="small">{{ ev.examiner.name }}</td>
                             <td class="text-center">
-                                <span class="badge bg-success fs-5 px-3 py-2">
-                                    {{ ev.marks }}
+                                <span class="badge px-3 py-2 fs-6 font-monospace" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1.5px solid rgba(139,46,36,0.3);">
+                                    {{ ev.marks }} pts
                                 </span>
                             </td>
-                            <td class="small text-secondary" style="max-width: 260px;">
-                                "{{ ev.remarks or 'Satisfactory evaluation completed.' }}"
+                            <td class="small text-secondary fst-italic" style="max-width: 260px;">
+                                &ldquo;{{ ev.remarks or 'Satisfactory evaluation completed.' }}&rdquo;
                             </td>
-                            <td class="text-end">
-                                <div class="btn-group btn-group-sm">
-                                    <a href="{{ url_for('view_result_report', evaluation_id=ev.id) }}" class="btn btn-outline-primary" title="View & Print Transcript">
-                                        <i class="bi bi-file-earmark-text me-1"></i>Transcript
-                                    </a>
-                                    <a href="{{ url_for('download_result_pdf', evaluation_id=ev.id) }}" class="btn btn-success" title="Download Official Vector PDF">
-                                        <i class="bi bi-file-earmark-pdf me-1"></i>PDF
-                                    </a>
-                                </div>
+                            <td class="text-end pe-3">
+                                <a href="{{ url_for('view_result_report', evaluation_id=ev.id) }}" class="btn btn-outline-primary btn-sm" title="View Transcript">
+                                    <i class="bi bi-file-earmark-text me-1"></i>Transcript
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -82,7 +77,7 @@
             {% else %}
             <div class="p-5 text-center text-muted">
                 <i class="bi bi-award display-4 d-block mb-2 text-secondary"></i>
-                <h5 class="fw-bold">No Examination Results Available Yet</h5>
+                <h5 class="fw-bold">No Examination Results Published Yet</h5>
                 <p class="small text-muted mb-0">Once your faculty examiner completes your slot evaluation, your certified grades and downloadable reports will appear here.</p>
             </div>
             {% endif %}

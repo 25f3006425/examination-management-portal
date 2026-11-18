@@ -1,48 +1,51 @@
 {% extends "base.html" %}
 
-{% block title %}Study & Examination Resources – Student Portal{% endblock %}
+{% block title %}Course Study Resources &middot; Student Portal{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <div>
-            <h2 class="fw-bold mb-1"><i class="bi bi-folder2-open me-2 text-primary"></i>Course & Examination Study Resources</h2>
-            <p class="text-muted mb-0">Access official syllabus, lecture slides, sample questions, and reference materials.</p>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-folder2-open me-2 text-gold"></i>Academic Course &amp; Examination Study Resources</h2>
+                <p>Access official syllabi, reference papers, lecture drives, and supplementary preparation material.</p>
+            </div>
+            <div>
+                <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Dashboard
+                </a>
+            </div>
         </div>
-        <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
-        </a>
     </div>
 
-    <!-- Course Resource Accordion/Cards -->
     <div class="row g-4">
         {% if courses %}
             {% for course in courses %}
             <div class="col-lg-6">
-                <div class="card h-100 shadow-sm border">
-                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
+                <div class="card h-100 shadow-sm" style="border-top: 4px solid var(--maroon);">
+                    <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
                         <div>
-                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle me-2">Course</span>
-                            <h5 class="d-inline-block fw-bold text-dark mb-0">{{ course.name }}</h5>
+                            <span class="badge bg-gold text-dark me-2">Course</span>
+                            <span class="fw-bold fs-6">{{ course.name }}</span>
                         </div>
-                        <span class="badge {% if course.resources %}bg-success{% else %}bg-secondary{% endif %}">
+                        <span class="badge bg-white text-dark shadow-sm">
                             {{ course.resources|length }} resource(s)
                         </span>
                     </div>
 
-                    <div class="card-body p-4">
+                    <div class="card-body p-4 bg-white">
                         {% if course.description %}
                         <p class="text-muted small mb-3">{{ course.description }}</p>
                         {% endif %}
 
-                        <!-- Examinations linked to this course -->
                         {% if course.examinations %}
                         <div class="mb-3">
                             <span class="text-muted small fw-semibold">Linked Examinations:</span>
                             <div class="d-flex flex-wrap gap-1 mt-1">
                                 {% for ex in course.examinations %}
-                                <span class="badge bg-light text-dark border">{{ ex.name }}</span>
+                                <span class="badge" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1px solid rgba(139,46,36,0.2);">
+                                    <i class="bi bi-clipboard2-check me-1"></i>{{ ex.name }}
+                                </span>
                                 {% endfor %}
                             </div>
                         </div>
@@ -50,20 +53,19 @@
 
                         <hr class="text-muted opacity-25">
 
-                        <!-- Resources Section -->
-                        <h6 class="fw-bold text-dark mb-3"><i class="bi bi-link-45deg text-primary me-1"></i>Available Materials</h6>
+                        <h6 class="fw-bold text-maroon mb-3"><i class="bi bi-files text-gold me-2"></i>Curriculum Study Materials</h6>
                         {% if course.resources %}
-                            <div class="list-group list-group-flush border rounded">
+                            <div class="list-group list-group-flush border rounded overflow-hidden">
                                 {% for r in course.resources %}
                                 <a href="{{ r.url }}" target="_blank" class="list-group-item list-group-item-action p-3 d-flex justify-content-between align-items-center">
                                     <div>
-                                        <div class="fw-semibold text-primary"><i class="bi bi-file-earmark-text me-2"></i>{{ r.title }}</div>
+                                        <div class="fw-semibold text-maroon"><i class="bi bi-box-arrow-up-right me-2 text-gold"></i>{{ r.title }}</div>
                                         {% if r.description %}
                                         <div class="small text-muted mt-1">{{ r.description }}</div>
                                         {% endif %}
-                                        <div class="small text-secondary mt-1"><i class="bi bi-clock me-1"></i>Added on {{ r.created_at or 'Standard' }}</div>
+                                        <div class="small text-secondary mt-1"><i class="bi bi-clock me-1"></i>Published: {{ r.created_at or 'Standard' }}</div>
                                     </div>
-                                    <span class="btn btn-sm btn-outline-primary ms-2"><i class="bi bi-box-arrow-up-right"></i> Open</span>
+                                    <span class="btn btn-sm btn-gold ms-2 text-nowrap"><i class="bi bi-box-arrow-up-right me-1"></i>Open</span>
                                 </a>
                                 {% endfor %}
                             </div>

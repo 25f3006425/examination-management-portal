@@ -1,42 +1,42 @@
 {% extends "base.html" %}
 
-{% block title %}Course Management – Admin Portal{% endblock %}
+{% block title %}Course &amp; Curriculum Management &middot; Admin Portal{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <div>
-            <h2 class="fw-bold mb-1"><i class="bi bi-book-half me-2 text-primary"></i>Course & Curriculum Management</h2>
-            <p class="text-muted mb-0">Manage institutional courses, attach study resources and manage examination associations.</p>
-        </div>
-        <div class="d-flex gap-2">
-            <a href="{{ url_for('add_course') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle me-1"></i> Add New Course
-            </a>
-            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i> Dashboard
-            </a>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-book-half me-2 text-gold"></i>Course Catalog &amp; Curricula</h2>
+                <p>Configure degree course subjects, attach student syllabus resources, and audit exam mappings.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('add_course') }}" class="btn btn-gold btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i>Add New Course
+                </a>
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Dashboard
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Courses Table -->
-    <div class="card shadow-sm border bg-white">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-collection me-2 text-primary"></i>Registered Courses</h5>
-            <span class="badge bg-primary rounded-pill">{{ courses|length }} Courses</span>
+    <div class="card shadow-sm">
+        <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-collection-fill me-2 text-gold"></i>Registered Academic Courses</span>
+            <span class="badge bg-gold text-dark">{{ courses|length }} Courses</span>
         </div>
         <div class="card-body p-0">
             {% if courses %}
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th style="width: 70px;">ID</th>
-                            <th>Course Name & Description</th>
-                            <th>Study Resources</th>
+                            <th>Course Name &amp; Description</th>
+                            <th>Curriculum Resources</th>
                             <th>Examinations Linked</th>
-                            <th class="text-end">Actions</th>
+                            <th class="text-end pe-3" style="width: 170px;">Operations</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +45,7 @@
                             <td class="text-muted fw-bold">#{{ c.id }}</td>
                             <td>
                                 <div class="fw-bold text-dark fs-6">{{ c.name }}</div>
-                                <div class="small text-muted">{{ c.description or 'No description provided.' }}</div>
+                                <div class="small text-muted">{{ c.description or 'No formal description entered.' }}</div>
                             </td>
                             <td>
                                 <a href="{{ url_for('course_resources', course_id=c.id) }}" class="btn btn-sm btn-outline-primary">
@@ -53,11 +53,13 @@
                                 </a>
                             </td>
                             <td>
-                                <span class="badge bg-light text-dark border">{{ c.examinations|length }} exam(s)</span>
+                                <span class="badge px-2 py-1" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1px solid rgba(139,46,36,0.2);">
+                                    <i class="bi bi-clipboard2-check me-1"></i>{{ c.examinations|length }} exam(s)
+                                </span>
                             </td>
-                            <td class="text-end">
+                            <td class="text-end pe-3">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ url_for('edit_course', course_id=c.id) }}" class="btn btn-outline-warning">
+                                    <a href="{{ url_for('edit_course', course_id=c.id) }}" class="btn btn-gold">
                                         <i class="bi bi-pencil"></i> Edit
                                     </a>
                                     <form action="{{ url_for('delete_course', course_id=c.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this course?');">
@@ -75,7 +77,8 @@
             {% else %}
             <div class="p-5 text-center text-muted">
                 <i class="bi bi-book display-4 d-block mb-2 text-secondary"></i>
-                No courses added yet. Click <strong>Add New Course</strong> to create one.
+                <p class="mb-2">No academic courses registered yet.</p>
+                <a href="{{ url_for('add_course') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>Create First Course</a>
             </div>
             {% endif %}
         </div>

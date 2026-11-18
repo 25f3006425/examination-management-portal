@@ -13,7 +13,9 @@ with app.app_context():
             name="Admin",
             email="admin@example.com",
             password_hash=generate_password_hash("Admin@123"),
-            role="Admin"
+            role="Admin",
+            is_approved=True,
+            is_active=True
         )
 
         db.session.add(admin)

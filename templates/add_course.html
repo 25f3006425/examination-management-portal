@@ -1,52 +1,52 @@
 {% extends "base.html" %}
 
-{% block title %}Add New Course – Admin Portal{% endblock %}
+{% block title %}Create Academic Course &middot; Admin Portal{% endblock %}
 
 {% block content %}
-<div class="container my-4">
+<div class="container my-3">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card shadow-sm border">
-                <div class="card-header bg-dark text-white py-3">
-                    <h5 class="fw-bold mb-0"><i class="bi bi-plus-circle me-2"></i>Create New Course</h5>
+            <div class="card shadow-sm" style="border-top: 4px solid var(--maroon);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-journal-plus me-2 text-gold"></i>Register New Academic Course</span>
+                    <span class="badge bg-gold text-dark">Curriculum Setup</span>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 bg-white">
                     <form method="POST">
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Course Name <span class="text-danger">*</span></label>
-                            <input type="text" name="name" class="form-control" placeholder="e.g. Modern Application Development I" required>
+                            <label class="form-label">Course Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" placeholder="e.g. Modern Application Development I" required autofocus>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Course Description</label>
+                            <label class="form-label">Course Description</label>
                             <textarea name="description" class="form-control" rows="3" placeholder="Overview of the curriculum, objectives, and prerequisites..."></textarea>
                         </div>
 
-                        <!-- Optional Initial Study Resource -->
-                        <div class="border rounded p-3 bg-light mb-4">
-                            <h6 class="fw-bold text-primary mb-2">
-                                <i class="bi bi-folder2-open me-1"></i>Initial Study Resource (Optional)
+                        <div class="border rounded p-3 mb-4" style="background-color: var(--gold-subtle); border-color: rgba(212,160,23,0.3) !important;">
+                            <h6 class="fw-bold text-maroon mb-1">
+                                <i class="bi bi-folder2-open text-gold me-2"></i>Initial Course Resource (Optional)
                             </h6>
-                            <p class="small text-muted mb-3">You can attach an initial resource link now, or add more later via <strong>Manage Resources</strong>.</p>
+                            <p class="small text-muted mb-3">Attach syllabus, course drive or reference documentation (can also be managed later).</p>
                             
                             <div class="row g-2">
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-semibold">Resource Title</label>
-                                    <input type="text" name="resource_title" class="form-control form-control-sm" placeholder="e.g. Course Syllabus & Notes">
+                                    <label class="form-label small">Resource Title</label>
+                                    <input type="text" name="resource_title" class="form-control form-control-sm" placeholder="e.g. Official Lecture Slides">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-semibold">Resource URL</label>
-                                    <input type="url" name="resource_url" class="form-control form-control-sm" placeholder="https://...">
+                                    <label class="form-label small">Resource URL</label>
+                                    <input type="url" name="resource_url" class="form-control form-control-sm" placeholder="https://drive.google.com/...">
                                 </div>
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center">
                             <a href="{{ url_for('courses') }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left me-1"></i> Cancel
+                                <i class="bi bi-arrow-left me-1"></i>Cancel
                             </a>
-                            <button type="submit" class="btn btn-primary px-4 fw-semibold">
-                                <i class="bi bi-check-lg me-1"></i> Create Course
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-lg me-1"></i>Create Course
                             </button>
                         </div>
                     </form>

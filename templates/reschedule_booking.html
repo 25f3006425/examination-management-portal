@@ -1,97 +1,76 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Reschedule Booking</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}Reschedule Student Booking &middot; Admin Portal{% endblock %}
 
-<div class="container mt-4">
+{% block content %}
+<div class="container my-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="erp-header mb-4">
+                <h2><i class="bi bi-calendar2-range me-2 text-gold"></i>Reschedule Student Booking</h2>
+                <p>Transfer student registration to an alternate available faculty examination slot.</p>
+            </div>
 
-    <h2>Reschedule Booking</h2>
+            <div class="card shadow-sm mb-4" style="border-top: 4px solid var(--maroon);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-ticket-detailed-fill me-2 text-gold"></i>Current Booking Reservation</span>
+                    <span class="badge bg-gold text-dark">Booking #{{ booking.id }}</span>
+                </div>
+                <div class="card-body p-4 bg-white">
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Student Name:</span>
+                            <span class="fw-bold text-dark">{{ booking.student.name }}</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Examination:</span>
+                            <span class="fw-bold text-maroon">{{ booking.slot.examination.name }}</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Current Assigned Examiner:</span>
+                            <span class="fw-semibold">{{ booking.slot.examiner.name }}</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Current Date &amp; Time:</span>
+                            <span class="badge font-monospace" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1px solid rgba(139,46,36,0.2);">
+                                <i class="bi bi-calendar3 me-1"></i>{{ booking.slot.date }} at {{ booking.slot.time }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="card p-3 mb-4">
+            <div class="card shadow-sm" style="border-top: 4px solid var(--gold);">
+                <div class="card-header card-header-gold">
+                    <i class="bi bi-arrow-repeat me-2"></i>Select New Available Slot
+                </div>
+                <div class="card-body p-4 bg-white">
+                    <form method="POST">
+                        <div class="mb-4">
+                            <label class="form-label">Available Target Slot <span class="text-danger">*</span></label>
+                            <select name="slot_id" class="form-select" required>
+                                <option value="">&mdash; Choose alternate slot &mdash;</option>
+                                {% for slot in slots %}
+                                <option value="{{ slot.id }}" {% if slot.id == booking.slot_id %}disabled{% endif %}>
+                                    Slot #{{ slot.id }} &middot; {{ slot.date }} ({{ slot.time }}) &mdash; {{ slot.examiner.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text small mt-1">Student will be notified immediately of the rescheduled session.</div>
+                        </div>
 
-        <h5>Booking Details</h5>
-
-        <p><strong>Booking ID:</strong> {{ booking.id }}</p>
-
-        <p><strong>Student:</strong>
-            {{ booking.student.name }}
-        </p>
-
-        <p><strong>Examination:</strong>
-            {{ booking.slot.examination.name }}
-        </p>
-
-        <p><strong>Current Examiner:</strong>
-            {{ booking.slot.examiner.name }}
-        </p>
-
-        <p><strong>Current Date:</strong>
-            {{ booking.slot.date }}
-        </p>
-
-        <p><strong>Current Time:</strong>
-            {{ booking.slot.time }}
-        </p>
-
-    </div>
-
-    {% with messages = get_flashed_messages() %}
-        {% for message in messages %}
-            <div class="alert alert-warning">{{ message }}</div>
-        {% endfor %}
-    {% endwith %}
-
-    <form method="POST">
-
-        <div class="mb-3">
-
-            <label class="form-label">
-                Select New Slot
-            </label>
-
-            <select name="slot_id"
-                    class="form-select"
-                    required>
-
-                <option value="">Choose a slot</option>
-
-                {% for slot in slots %}
-
-                    <option value="{{ slot.id }}"
-                        {% if slot.id == booking.slot_id %}
-                            disabled
-                        {% endif %}>
-
-                        Slot {{ slot.id }} -
-                        {{ slot.date }} -
-                        {{ slot.time }} -
-                        {{ slot.examiner.name }}
-
-                    </option>
-
-                {% endfor %}
-
-            </select>
-
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('admin_bookings') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-lg me-1"></i>Confirm Reschedule
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <button type="submit" class="btn btn-primary">
-            Confirm Reschedule
-        </button>
-
-        <a href="{{ url_for('admin_bookings') }}"
-           class="btn btn-secondary">
-            Cancel
-        </a>
-
-    </form>
-
+    </div>
 </div>
-
-</body>
-</html>
+{% endblock %}

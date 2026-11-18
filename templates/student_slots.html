@@ -1,67 +1,83 @@
 {% extends "base.html" %}
 
+{% block title %}Available Slots &middot; {{ examination.name }}{% endblock %}
+
 {% block content %}
-
-<div class="container mt-4">
-
-    <h2>{{ examination.name }}</h2>
-
-    <p>Available examination slots are listed below.</p>
-
-    {% if available_slots %}
-
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-
-            <thead>
-                <tr>
-                    <th>Slot ID</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Available Seats</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for item in available_slots %}
-                <tr>
-                    <td>{{ item.slot.id }}</td>
-                    <td>{{ item.slot.date }}</td>
-                    <td>{{ item.slot.time }}</td>
-                    <td>{{ item.remaining_seats }}</td>
-                    <td>
-                        <form method="POST"
-                              action="{{ url_for(
-                                  'student_book_slot',
-                                  slot_id=item.slot.id
-                              ) }}">
-
-                            <button type="submit"
-                                    class="btn btn-success btn-sm">
-                                Book Slot
-                            </button>
-
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-
-        </table>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-calendar-check me-2 text-gold"></i>{{ examination.name }} &middot; Available Slots</h2>
+                <p>Course: <strong>{{ examination.course.name if examination.course else '' }}</strong> &middot; Select your preferred viva session and confirm your reservation.</p>
+            </div>
+            <div>
+                <a href="{{ url_for('student_examinations') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Examinations
+                </a>
+            </div>
+        </div>
     </div>
 
-    {% else %}
-
-        <p>No available slots for this examination.</p>
-
-    {% endif %}
-
-    <a href="{{ url_for('student_examinations') }}"
-       class="btn btn-secondary">
-        Back to Examinations
-    </a>
-
+    <div class="card shadow-sm" style="border-top: 4px solid var(--maroon);">
+        <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-clock-history me-2 text-gold"></i>Open Viva Voce Time Slots</span>
+            <span class="badge bg-gold text-dark">{{ available_slots|length }} Slots Available</span>
+        </div>
+        <div class="card-body p-0">
+            {% if available_slots %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Slot ID</th>
+                            <th>Examiner</th>
+                            <th>Scheduled Date</th>
+                            <th>Time Window</th>
+                            <th class="text-center">Seat Availability</th>
+                            <th class="text-end pe-3" style="width: 150px;">Reservation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in available_slots %}
+                        <tr>
+                            <td class="fw-bold text-muted">#{{ item.slot.id }}</td>
+                            <td>
+                                <div class="fw-semibold text-dark"><i class="bi bi-person-badge text-gold me-1"></i>{{ item.slot.examiner.name }}</div>
+                            </td>
+                            <td>
+                                <i class="bi bi-calendar3 text-maroon me-1"></i>{{ item.slot.date }}
+                            </td>
+                            <td>
+                                <span class="badge font-monospace" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1px solid rgba(139,46,36,0.2);">
+                                    <i class="bi bi-clock me-1"></i>{{ item.slot.time }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-success font-monospace px-3 py-2 fs-6">
+                                    {{ item.remaining_seats }} seat(s) open
+                                </span>
+                            </td>
+                            <td class="text-end pe-3">
+                                <form method="POST" action="{{ url_for('student_book_slot', slot_id=item.slot.id) }}">
+                                    <button type="submit" class="btn btn-gold btn-sm">
+                                        <i class="bi bi-ticket-perforated me-1"></i>Book Slot
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-calendar-x display-5 d-block mb-2 text-secondary"></i>
+                <h5 class="fw-bold">No Open Slots</h5>
+                <p class="mb-3">No examination slots are currently open for reservation in this examination timeline.</p>
+                <a href="{{ url_for('student_examinations') }}" class="btn btn-primary btn-sm">Browse Other Examinations</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
-
 {% endblock %}

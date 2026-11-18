@@ -1,49 +1,45 @@
 {% extends "base.html" %}
 
-{% block title %}Examiner Dashboard – Exam Portal{% endblock %}
+{% block title %}Faculty Examiner Dashboard &middot; Exam Portal{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <!-- Header -->
-    <div class="card shadow-sm border-0 mb-4 bg-white">
-        <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="rounded-circle bg-success-subtle text-success p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
-                        <i class="bi bi-person-badge"></i>
-                    </div>
-                    <div>
-                        <h3 class="fw-bold mb-1 text-dark">Faculty Portal &middot; {{ examiner.name }}</h3>
-                        <div class="d-flex flex-wrap gap-2 align-items-center text-muted small">
-                            <span class="badge bg-success">Approved Faculty Examiner</span>
-                            {% if examiner.examiner_profile and examiner.examiner_profile.specialization %}
-                            <span class="badge bg-secondary-subtle text-secondary border">{{ examiner.examiner_profile.specialization }}</span>
-                            {% endif %}
-                            <span>{{ examiner.email }}</span>
-                        </div>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 58px; height: 58px; background-color: rgba(255,255,255,0.15); border: 2px solid var(--gold);">
+                    <i class="bi bi-person-badge text-gold fs-3"></i>
+                </div>
+                <div>
+                    <h2>{{ examiner.name }} &middot; Faculty Evaluation Portal</h2>
+                    <div class="d-flex flex-wrap gap-2 align-items-center small mt-1">
+                        <span class="badge bg-gold text-dark"><i class="bi bi-patch-check-fill me-1"></i>Approved Faculty Examiner</span>
+                        {% if examiner.examiner_profile and examiner.examiner_profile.specialization %}
+                        <span class="badge bg-white text-dark">{{ examiner.examiner_profile.specialization }}</span>
+                        {% endif %}
+                        <span class="text-light opacity-75"><i class="bi bi-envelope me-1"></i>{{ examiner.email }}</span>
                     </div>
                 </div>
-                <div class="d-flex gap-2">
-                    <a href="{{ url_for('examiner_slots') }}" class="btn btn-primary">
-                        <i class="bi bi-clock-history me-1"></i> Manage Slots
-                    </a>
-                    <a href="{{ url_for('examiner_history') }}" class="btn btn-outline-secondary">
-                        <i class="bi bi-archive me-1"></i> History & Analytics
-                    </a>
-                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('examiner_slots') }}" class="btn btn-gold btn-sm">
+                    <i class="bi bi-clock-history me-1"></i>Manage Slots
+                </a>
+                <a href="{{ url_for('examiner_history') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-archive me-1"></i>History &amp; Analytics
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Announcements for Examiner -->
     {% if announcements %}
-    <div class="card shadow-sm border-0 mb-4 bg-warning-subtle border-start border-4 border-warning">
+    <div class="card mb-4 shadow-sm" style="border-left: 5px solid var(--gold); background-color: var(--gold-light);">
         <div class="card-body p-3">
             <div class="d-flex align-items-start gap-3">
-                <i class="bi bi-megaphone-fill fs-4 text-warning-emphasis mt-1"></i>
+                <i class="bi bi-megaphone-fill fs-3 text-warning-emphasis mt-1"></i>
                 <div class="flex-grow-1">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <h6 class="fw-bold text-warning-emphasis mb-1">Institutional Notice</h6>
+                        <h6 class="fw-bold mb-1" style="color: #7A5700;"><i class="bi bi-pin-angle-fill me-1"></i>Official University Notice</h6>
                         <span class="text-muted small">{{ announcements[0].created_at }}</span>
                     </div>
                     <div class="fw-semibold text-dark">{{ announcements[0].title }}</div>
@@ -54,97 +50,95 @@
     </div>
     {% endif %}
 
-    <!-- Dashboard Statistics -->
     <div class="row g-3 mb-4">
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card text-white bg-primary h-100 shadow-sm border-0">
+            <div class="card stat-card stat-card-maroon h-100">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Assigned Exams</div>
-                        <h3 class="fw-bold mb-0 mt-1">{{ total_examinations }}</h3>
-                        <div class="small opacity-75">Curriculum subjects</div>
+                        <div class="card-title text-light">Assigned Exams</div>
+                        <div class="stat-value">{{ total_examinations }}</div>
+                        <div class="small text-white-50">Curriculum subjects</div>
                     </div>
-                    <i class="bi bi-clipboard2-check display-6 opacity-50"></i>
+                    <i class="bi bi-clipboard2-check fs-1 text-gold opacity-75"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card text-white bg-success h-100 shadow-sm border-0">
+            <div class="card stat-card stat-card-gold h-100">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Created Slots</div>
-                        <h3 class="fw-bold mb-0 mt-1">{{ total_slots }}</h3>
-                        <div class="small opacity-75">Time windows</div>
+                        <div class="card-title text-light">Created Slots</div>
+                        <div class="stat-value">{{ total_slots }}</div>
+                        <div class="small text-white-50">Session allocations</div>
                     </div>
-                    <i class="bi bi-calendar-range display-6 opacity-50"></i>
+                    <i class="bi bi-calendar-range fs-1 text-white opacity-75"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card text-white bg-info h-100 shadow-sm border-0">
+            <div class="card stat-card stat-card-maroon h-100">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Students Booked</div>
-                        <h3 class="fw-bold mb-0 mt-1">{{ total_bookings }}</h3>
-                        <div class="small opacity-75">Active reservations</div>
+                        <div class="card-title text-light">Students Booked</div>
+                        <div class="stat-value">{{ total_bookings }}</div>
+                        <div class="small text-white-50">Reserved viva slots</div>
                     </div>
-                    <i class="bi bi-people display-6 opacity-50"></i>
+                    <i class="bi bi-people fs-1 text-gold opacity-75"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card text-white {% if pending_evaluations > 0 %}bg-danger{% else %}bg-secondary{% endif %} h-100 shadow-sm border-0">
+            <div class="card stat-card stat-card-gold h-100">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Pending Evaluations</div>
-                        <h3 class="fw-bold mb-0 mt-1">{{ pending_evaluations }}</h3>
-                        <div class="small opacity-75">Awaiting marks submission</div>
+                        <div class="card-title text-light">Pending Evals</div>
+                        <div class="stat-value">{{ pending_evaluations }}</div>
+                        <div class="small text-white-50">Awaiting marks</div>
                     </div>
-                    <i class="bi bi-hourglass-bottom display-6 opacity-50"></i>
+                    <i class="bi bi-hourglass-split fs-1 text-white opacity-75"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Quick Action Cards -->
     <div class="row g-4">
         <div class="col-md-4">
-            <div class="card shadow-sm border h-100 bg-white">
-                <div class="card-body p-4 text-center">
-                    <i class="bi bi-pencil-square display-5 text-primary mb-2 d-block"></i>
-                    <h5 class="fw-bold text-dark mb-2">Student Evaluations</h5>
-                    <p class="small text-muted mb-3">Grade booked students, fill assessment rubrics, and publish verified scores.</p>
-                    <a href="{{ url_for('examiner_bookings') }}" class="btn btn-outline-primary btn-sm w-100">
-                        Open Evaluation Desk &rarr;
+            <div class="card shadow-sm h-100 text-center p-3" style="border-top: 3.5px solid var(--maroon);">
+                <div class="card-body">
+                    <i class="bi bi-pencil-square display-5 text-maroon mb-2 d-block"></i>
+                    <h5 class="fw-bold text-dark mb-2">Student Evaluation Desk</h5>
+                    <p class="small text-muted mb-3">Grade registered students, evaluate rubric criteria, and record confidential examiner remarks.</p>
+                    <a href="{{ url_for('examiner_bookings') }}" class="btn btn-primary btn-sm w-100">
+                        <i class="bi bi-check2-square me-1"></i>Open Evaluation Desk
                     </a>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4">
-            <div class="card shadow-sm border h-100 bg-white">
-                <div class="card-body p-4 text-center">
-                    <i class="bi bi-clock-history display-5 text-success mb-2 d-block"></i>
+            <div class="card shadow-sm h-100 text-center p-3" style="border-top: 3.5px solid var(--gold);">
+                <div class="card-body">
+                    <i class="bi bi-clock-history display-5 text-gold mb-2 d-block"></i>
                     <h5 class="fw-bold text-dark mb-2">Slot Management</h5>
-                    <p class="small text-muted mb-3">Create new time slots within the automated slot creation window set by Admin.</p>
-                    <a href="{{ url_for('examiner_slots') }}" class="btn btn-outline-success btn-sm w-100">
-                        Manage Your Slots &rarr;
+                    <p class="small text-muted mb-3">Create and configure viva exam slots according to active institutional timelines.</p>
+                    <a href="{{ url_for('examiner_slots') }}" class="btn btn-gold btn-sm w-100">
+                        <i class="bi bi-calendar-plus me-1"></i>Manage Your Slots
                     </a>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4">
-            <div class="card shadow-sm border h-100 bg-white">
-                <div class="card-body p-4 text-center">
-                    <i class="bi bi-bar-chart-fill display-5 text-info mb-2 d-block"></i>
-                    <h5 class="fw-bold text-dark mb-2">History & Grading Analytics</h5>
-                    <p class="small text-muted mb-3">View past evaluations archive, score distributions, and your performance metrics.</p>
-                    <a href="{{ url_for('examiner_history') }}" class="btn btn-outline-info btn-sm w-100">
-                        View Past Work & Analytics &rarr;
+            <div class="card shadow-sm h-100 text-center p-3" style="border-top: 3.5px solid var(--maroon);">
+                <div class="card-body">
+                    <i class="bi bi-pie-chart-fill display-5 text-maroon mb-2 d-block"></i>
+                    <h5 class="fw-bold text-dark mb-2">History &amp; Grading Analytics</h5>
+                    <p class="small text-muted mb-3">Audit past student evaluations, grade distributions, and your personal evaluation throughput.</p>
+                    <a href="{{ url_for('examiner_history') }}" class="btn btn-outline-primary btn-sm w-100">
+                        <i class="bi bi-graph-up me-1"></i>View Past Work &amp; Stats
                     </a>
                 </div>
             </div>

@@ -1,48 +1,44 @@
 {% extends "base.html" %}
 
-{% block title %}Student Dashboard – Exam Portal{% endblock %}
+{% block title %}Student Dashboard &middot; Exam Portal{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <!-- Welcome Header & Student Profile Snapshot -->
-    <div class="card shadow-sm border-0 mb-4 bg-white">
-        <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="rounded-circle bg-primary-subtle text-primary p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
-                        <i class="bi bi-mortarboard-fill"></i>
-                    </div>
-                    <div>
-                        <h3 class="fw-bold mb-1 text-dark">Welcome back, {{ student.name }}!</h3>
-                        <div class="d-flex flex-wrap gap-2 align-items-center text-muted small">
-                            <span class="badge bg-primary text-white"><i class="bi bi-person-vcard me-1"></i>Roll: {{ student.roll_number or 'N/A' }}</span>
-                            <span class="badge bg-secondary-subtle text-secondary border"><i class="bi bi-building me-1"></i>{{ student.department or 'Data Science & Applications' }}</span>
-                            <span class="badge bg-info-subtle text-info-emphasis border"><i class="bi bi-calendar me-1"></i>{{ student.year or 'Academic Year' }}</span>
-                            <span>&middot; {{ student.email }}</span>
-                        </div>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 58px; height: 58px; background-color: rgba(255,255,255,0.15); border: 2px solid var(--gold);">
+                    <i class="bi bi-mortarboard-fill text-gold fs-3"></i>
+                </div>
+                <div>
+                    <h2>Welcome, {{ student.name }}</h2>
+                    <div class="d-flex flex-wrap gap-2 align-items-center small mt-1">
+                        <span class="badge bg-gold text-dark"><i class="bi bi-person-vcard me-1"></i>Roll: {{ student.roll_number or 'N/A' }}</span>
+                        <span class="badge bg-white text-dark">{{ student.department or 'Data Science & Applications' }}</span>
+                        <span class="badge bg-white text-dark">{{ student.year or 'Academic Year' }}</span>
+                        <span class="text-light opacity-75">&middot; {{ student.email }}</span>
                     </div>
                 </div>
-                <div class="d-flex gap-2">
-                    <a href="{{ url_for('student_calendar') }}" class="btn btn-outline-primary">
-                        <i class="bi bi-calendar3 me-1"></i> Exam Calendar
-                    </a>
-                    <a href="{{ url_for('student_profile') }}" class="btn btn-outline-secondary">
-                        <i class="bi bi-pencil-square me-1"></i> Edit Profile
-                    </a>
-                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('student_calendar') }}" class="btn btn-gold btn-sm">
+                    <i class="bi bi-calendar3 me-1"></i>Exam Calendar
+                </a>
+                <a href="{{ url_for('student_profile') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-pencil-square me-1"></i>My Profile
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Announcements Carousel / Banner -->
     {% if announcements %}
-    <div class="card shadow-sm border-0 mb-4 bg-warning-subtle border-start border-4 border-warning">
+    <div class="card mb-4 shadow-sm" style="border-left: 5px solid var(--gold); background-color: var(--gold-light);">
         <div class="card-body p-3">
             <div class="d-flex align-items-start gap-3">
-                <i class="bi bi-megaphone-fill fs-4 text-warning-emphasis mt-1"></i>
+                <i class="bi bi-megaphone-fill fs-3 text-warning-emphasis mt-1"></i>
                 <div class="flex-grow-1">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <h6 class="fw-bold text-warning-emphasis mb-1">Campus Examination Announcement</h6>
+                        <h6 class="fw-bold mb-1" style="color: #7A5700;"><i class="bi bi-pin-angle-fill me-1"></i>Campus Examination Announcement</h6>
                         <span class="text-muted small">{{ announcements[0].created_at }}</span>
                     </div>
                     <div class="fw-semibold text-dark">{{ announcements[0].title }}</div>
@@ -53,68 +49,64 @@
     </div>
     {% endif %}
 
-    <!-- Key Statistics -->
     <div class="row g-3 mb-4">
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card text-white bg-primary h-100 shadow-sm border-0">
+            <div class="card stat-card stat-card-maroon h-100">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Total Bookings</div>
-                        <h3 class="fw-bold mb-0 mt-1">{{ total_bookings }}</h3>
-                        <div class="small opacity-75">All attempts</div>
+                        <div class="card-title text-light">Total Bookings</div>
+                        <div class="stat-value">{{ total_bookings }}</div>
+                        <div class="small text-white-50">All registered attempts</div>
                     </div>
-                    <i class="bi bi-journal-bookmark display-6 opacity-50"></i>
+                    <i class="bi bi-journal-bookmark fs-1 text-gold opacity-75"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card text-white bg-warning h-100 shadow-sm border-0">
+            <div class="card stat-card stat-card-gold h-100">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold text-dark">Upcoming Exams</div>
-                        <h3 class="fw-bold mb-0 mt-1 text-dark">{{ upcoming_examinations }}</h3>
-                        <div class="small opacity-75 text-dark">Slots reserved</div>
+                        <div class="card-title text-light">Upcoming Exams</div>
+                        <div class="stat-value">{{ upcoming_examinations }}</div>
+                        <div class="small text-white-50">Reserved viva slots</div>
                     </div>
-                    <i class="bi bi-clock-history display-6 opacity-50 text-dark"></i>
+                    <i class="bi bi-clock-history fs-1 text-white opacity-75"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card text-white bg-success h-100 shadow-sm border-0">
+            <div class="card stat-card stat-card-maroon h-100">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Completed Exams</div>
-                        <h3 class="fw-bold mb-0 mt-1">{{ completed_examinations }}</h3>
-                        <div class="small opacity-75">Graded & archived</div>
+                        <div class="card-title text-light">Completed Exams</div>
+                        <div class="stat-value">{{ completed_examinations }}</div>
+                        <div class="small text-white-50">Evaluated &amp; archived</div>
                     </div>
-                    <i class="bi bi-check-circle display-6 opacity-50"></i>
+                    <i class="bi bi-check-circle fs-1 text-gold opacity-75"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card text-white bg-info h-100 shadow-sm border-0">
+            <div class="card stat-card stat-card-gold h-100">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Average Marks</div>
-                        <h3 class="fw-bold mb-0 mt-1">{{ avg_marks }}</h3>
-                        <div class="small opacity-75">Highest: {{ highest_marks }}</div>
+                        <div class="card-title text-light">Average Marks</div>
+                        <div class="stat-value">{{ avg_marks }}</div>
+                        <div class="small text-white-50">Highest Score: {{ highest_marks }}</div>
                     </div>
-                    <i class="bi bi-graph-up display-6 opacity-50"></i>
+                    <i class="bi bi-graph-up fs-1 text-white opacity-75"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Current & Previous Results Section (Requirement 5) -->
-    <div class="card shadow-sm border mb-4">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
-            <h5 class="fw-bold text-dark mb-0">
-                <i class="bi bi-award-fill me-2 text-primary"></i>Current & Published Examination Results
-            </h5>
-            <a href="{{ url_for('student_results') }}" class="btn btn-outline-primary btn-sm">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-award-fill me-2 text-gold"></i>Current &amp; Published Examination Results</span>
+            <a href="{{ url_for('student_results') }}" class="btn btn-gold btn-sm">
                 View All Results &rarr;
             </a>
         </div>
@@ -122,15 +114,15 @@
             {% if all_results %}
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th>Examination</th>
                             <th>Course</th>
-                            <th>Date & Time</th>
+                            <th>Date &amp; Time</th>
                             <th>Examiner</th>
-                            <th class="text-center">Score</th>
-                            <th>Remarks</th>
-                            <th class="text-end">Official Reports</th>
+                            <th class="text-center">Final Score</th>
+                            <th>Feedback Remarks</th>
+                            <th class="text-end pe-3" style="width: 170px;">Transcripts</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -138,31 +130,26 @@
                         <tr>
                             <td>
                                 <div class="fw-bold text-dark">{{ ev.booking.slot.examination.name }}</div>
-                                <span class="badge bg-success-subtle text-success border border-success">Result Published</span>
+                                <span class="badge bg-success"><i class="bi bi-check-all me-1"></i>Published</span>
                             </td>
                             <td>{{ ev.booking.slot.examination.course.name }}</td>
                             <td>
-                                <div><i class="bi bi-calendar-event me-1"></i>{{ ev.booking.slot.date }}</div>
+                                <div><i class="bi bi-calendar-event text-maroon me-1"></i>{{ ev.booking.slot.date }}</div>
                                 <small class="text-muted"><i class="bi bi-clock me-1"></i>{{ ev.booking.slot.time }}</small>
                             </td>
                             <td class="small">{{ ev.examiner.name }}</td>
                             <td class="text-center">
-                                <span class="badge bg-success fs-6 px-3 py-2">
-                                    {{ ev.marks }}
+                                <span class="badge px-3 py-2 fs-6 font-monospace" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1.5px solid rgba(139,46,36,0.3);">
+                                    {{ ev.marks }} pts
                                 </span>
                             </td>
-                            <td class="small text-secondary">
-                                "{{ ev.remarks or 'Satisfactory evaluation.' }}"
+                            <td class="small text-secondary fst-italic">
+                                &ldquo;{{ ev.remarks or 'Satisfactory evaluation.' }}&rdquo;
                             </td>
-                            <td class="text-end">
-                                <div class="btn-group btn-group-sm">
-                                    <a href="{{ url_for('view_result_report', evaluation_id=ev.id) }}" class="btn btn-outline-primary" title="View Printable Transcript">
-                                        <i class="bi bi-file-earmark-text me-1"></i>Report
-                                    </a>
-                                    <a href="{{ url_for('download_result_pdf', evaluation_id=ev.id) }}" class="btn btn-outline-success" title="Download Official Vector PDF">
-                                        <i class="bi bi-download me-1"></i>PDF
-                                    </a>
-                                </div>
+                            <td class="text-end pe-3">
+                                <a href="{{ url_for('view_result_report', evaluation_id=ev.id) }}" class="btn btn-outline-primary btn-sm" title="View Transcript">
+                                    <i class="bi bi-file-earmark-text me-1"></i>Report
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -170,23 +157,21 @@
                 </table>
             </div>
             {% else %}
-            <div class="p-4 text-center text-muted">
-                <i class="bi bi-award display-6 d-block mb-2 text-secondary"></i>
-                <p class="mb-0">No examination evaluations have been published for you yet.</p>
-                <small class="text-muted">Once your examiner grades your slot, official results and PDF transcripts will appear here.</small>
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-award display-5 d-block mb-2 text-secondary"></i>
+                <p class="mb-1">No examination evaluations published yet.</p>
+                <small class="text-muted">Once your examiner grades your slot, verified scores and result reports will appear here.</small>
             </div>
             {% endif %}
         </div>
     </div>
 
-    <!-- Grid: Upcoming Bookings & Course Study Resources -->
     <div class="row g-4">
-        <!-- Upcoming Bookings -->
         <div class="col-lg-6">
-            <div class="card shadow-sm border h-100">
-                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-ticket-perforated me-2 text-primary"></i>Your Upcoming Exam Bookings</h5>
-                    <a href="{{ url_for('student_examinations') }}" class="btn btn-primary btn-sm">Book New Exam</a>
+            <div class="card shadow-sm h-100" style="border-top: 4px solid var(--maroon);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-ticket-perforated me-2 text-gold"></i>Upcoming Exam Bookings</span>
+                    <a href="{{ url_for('student_examinations') }}" class="btn btn-gold btn-sm">Book Exam</a>
                 </div>
                 <div class="card-body p-0">
                     {% if upcoming_bookings %}
@@ -195,50 +180,49 @@
                         <li class="list-group-item p-3">
                             <div class="d-flex justify-content-between align-items-start mb-1">
                                 <div class="fw-bold text-dark">{{ b.slot.examination.name }}</div>
-                                <span class="badge bg-primary">Confirmed</span>
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Confirmed</span>
                             </div>
-                            <div class="small text-muted mb-1">Course: {{ b.slot.examination.course.name }}</div>
-                            <div class="d-flex justify-content-between align-items-center mt-2 flex-wrap gap-2">
-                                <span class="badge bg-light text-dark border">
-                                    <i class="bi bi-calendar3 me-1 text-primary"></i>{{ b.slot.date }} &middot; {{ b.slot.time }}
+                            <div class="small text-muted mb-2">Course: {{ b.slot.examination.course.name }}</div>
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <span class="badge font-monospace" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1px solid rgba(139,46,36,0.2);">
+                                    <i class="bi bi-calendar3 me-1"></i>{{ b.slot.date }} &middot; {{ b.slot.time }}
                                 </span>
-                                <span class="small text-muted"><i class="bi bi-person me-1"></i>{{ b.slot.examiner.name }}</span>
+                                <span class="small text-muted"><i class="bi bi-person-badge me-1"></i>Examiner: {{ b.slot.examiner.name }}</span>
                             </div>
                         </li>
                         {% endfor %}
                     </ul>
                     {% else %}
-                    <div class="p-4 text-center text-muted">
-                        <i class="bi bi-calendar-x display-6 d-block mb-2 text-secondary"></i>
+                    <div class="p-5 text-center text-muted">
+                        <i class="bi bi-calendar-x display-5 d-block mb-2 text-secondary"></i>
                         <p class="mb-2">No upcoming exam bookings scheduled.</p>
-                        <a href="{{ url_for('student_examinations') }}" class="btn btn-outline-primary btn-sm">Browse Available Examinations</a>
+                        <a href="{{ url_for('student_examinations') }}" class="btn btn-primary btn-sm">Browse Available Examinations</a>
                     </div>
                     {% endif %}
                 </div>
             </div>
         </div>
 
-        <!-- Study Resources Section (Requirement 7) -->
         <div class="col-lg-6">
-            <div class="card shadow-sm border h-100">
-                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-folder2-open me-2 text-primary"></i>Course Study Resources</h5>
-                    <a href="{{ url_for('student_resources') }}" class="btn btn-outline-secondary btn-sm">View All Resources</a>
+            <div class="card shadow-sm h-100" style="border-top: 4px solid var(--gold);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-folder2-open me-2 text-gold"></i>Course Study Resources</span>
+                    <a href="{{ url_for('student_resources') }}" class="btn btn-gold btn-sm">All Resources</a>
                 </div>
                 <div class="card-body p-3">
                     {% if courses %}
                         {% for c in courses[:3] %}
-                        <div class="border rounded p-3 mb-2 bg-light">
+                        <div class="border rounded p-3 mb-2 bg-white">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <span class="fw-bold text-dark">{{ c.name }}</span>
-                                <span class="badge {% if c.resources %}bg-success{% else %}bg-secondary{% endif %}">
+                                <span class="badge {% if c.resources %}bg-maroon{% else %}bg-secondary{% endif %}">
                                     {{ c.resources|length }} resource(s)
                                 </span>
                             </div>
                             {% if c.resources %}
                                 <div class="mt-2">
                                     {% for r in c.resources[:2] %}
-                                    <a href="{{ r.url }}" target="_blank" class="d-block small text-primary text-decoration-none mb-1 text-truncate">
+                                    <a href="{{ r.url }}" target="_blank" class="d-block small text-maroon text-decoration-none mb-1 text-truncate fw-semibold">
                                         <i class="bi bi-box-arrow-up-right me-1"></i>{{ r.title }}
                                     </a>
                                     {% endfor %}

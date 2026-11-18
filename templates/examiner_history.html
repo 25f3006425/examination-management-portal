@@ -1,86 +1,85 @@
 {% extends "base.html" %}
 
-{% block title %}Evaluation History & Analytics – Examiner Portal{% endblock %}
+{% block title %}Evaluation History &amp; Analytics &middot; Faculty Portal{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <div>
-            <h2 class="fw-bold mb-1"><i class="bi bi-archive me-2 text-primary"></i>Examiner Evaluation History & Analytics</h2>
-            <p class="text-muted mb-0">Review all previously conducted student evaluations, marks assigned, and grading metrics.</p>
-        </div>
-        <div>
-            <a href="{{ url_for('examiner_dashboard') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i> Dashboard
-            </a>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-archive-fill me-2 text-gold"></i>Examiner Evaluation History &amp; Grading Analytics</h2>
+                <p>Comprehensive historical archive of completed viva evaluations, score allocations, and performance distributions.</p>
+            </div>
+            <div>
+                <a href="{{ url_for('examiner_dashboard') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Dashboard
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Summary KPI Cards -->
     <div class="row g-3 mb-4">
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card text-white bg-primary h-100 shadow-sm border-0">
+            <div class="card stat-card stat-card-maroon h-100">
                 <div class="card-body p-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Students Evaluated</div>
-                        <h2 class="display-6 fw-bold mb-0 mt-1">{{ total_completed }}</h2>
-                        <div class="small opacity-75 mt-1">Total completed</div>
+                        <div class="card-title text-light">Students Evaluated</div>
+                        <div class="stat-value">{{ total_completed }}</div>
+                        <div class="small text-white-50">Completed vivas</div>
                     </div>
-                    <i class="bi bi-people display-5 opacity-50"></i>
+                    <i class="bi bi-people fs-1 text-gold opacity-75"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card text-white bg-success h-100 shadow-sm border-0">
+            <div class="card stat-card stat-card-gold h-100">
                 <div class="card-body p-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Average Score Given</div>
-                        <h2 class="display-6 fw-bold mb-0 mt-1">{{ avg_marks }}</h2>
-                        <div class="small opacity-75 mt-1">Mean assessment</div>
+                        <div class="card-title text-light">Average Score</div>
+                        <div class="stat-value">{{ avg_marks }}</div>
+                        <div class="small text-white-50">Mean grading</div>
                     </div>
-                    <i class="bi bi-calculator display-5 opacity-50"></i>
+                    <i class="bi bi-calculator fs-1 text-white opacity-75"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card text-white bg-info h-100 shadow-sm border-0">
+            <div class="card stat-card stat-card-maroon h-100">
                 <div class="card-body p-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Highest Score</div>
-                        <h2 class="display-6 fw-bold mb-0 mt-1">{{ highest_marks }}</h2>
-                        <div class="small opacity-75 mt-1">Top evaluation</div>
+                        <div class="card-title text-light">Highest Score</div>
+                        <div class="stat-value">{{ highest_marks }}</div>
+                        <div class="small text-white-50">Peak marks</div>
                     </div>
-                    <i class="bi bi-trophy display-5 opacity-50"></i>
+                    <i class="bi bi-trophy fs-1 text-gold opacity-75"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card text-white bg-secondary h-100 shadow-sm border-0">
+            <div class="card stat-card stat-card-gold h-100">
                 <div class="card-body p-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Lowest Score</div>
-                        <h2 class="display-6 fw-bold mb-0 mt-1">{{ lowest_marks }}</h2>
-                        <div class="small opacity-75 mt-1">Minimum score</div>
+                        <div class="card-title text-light">Lowest Score</div>
+                        <div class="stat-value">{{ lowest_marks }}</div>
+                        <div class="small text-white-50">Minimum marks</div>
                     </div>
-                    <i class="bi bi-arrow-down-circle display-5 opacity-50"></i>
+                    <i class="bi bi-arrow-down-circle fs-1 text-white opacity-75"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Visual Chart & Distribution Row -->
     <div class="row g-4 mb-4">
-        <!-- Grade Distribution Chart -->
         <div class="col-lg-6">
-            <div class="card shadow-sm border h-100">
-                <div class="card-header bg-white py-3">
-                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>Grading Distribution Breakdown</h5>
+            <div class="card shadow-sm h-100" style="border-top: 4px solid var(--maroon);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-pie-chart-fill me-2 text-gold"></i>Score Distribution Breakdown</span>
+                    <span class="badge bg-gold text-dark">Faculty Grading</span>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 bg-white">
                     {% if total_completed > 0 %}
                     <div style="position: relative; height: 260px;">
                         <canvas id="gradeDistributionChart"></canvas>
@@ -88,59 +87,58 @@
                     {% else %}
                     <div class="text-center text-muted py-5">
                         <i class="bi bi-pie-chart display-4 d-block mb-2 text-secondary"></i>
-                        Grading distribution will appear here once you evaluate students.
+                        Grading distribution visual will appear once student assessments are completed.
                     </div>
                     {% endif %}
                 </div>
             </div>
         </div>
 
-        <!-- Grade Range Count Summary -->
         <div class="col-lg-6">
-            <div class="card shadow-sm border h-100">
-                <div class="card-header bg-white py-3">
-                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-bar-chart-steps me-2 text-primary"></i>Performance Tier Overview</h5>
+            <div class="card shadow-sm h-100" style="border-top: 4px solid var(--gold);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-bar-chart-steps me-2 text-gold"></i>Academic Performance Tiers</span>
+                    <span class="badge bg-gold text-dark">Cohort Tiers</span>
                 </div>
-                <div class="card-body p-4 d-flex flex-column justify-content-around">
-                    <div class="d-flex justify-content-between align-items-center p-2 rounded bg-light border mb-2">
-                        <span class="fw-bold text-success"><i class="bi bi-award-fill me-2"></i>Distinction (90% - 100%)</span>
-                        <span class="badge bg-success fs-6">{{ grade_dist['90-100%'] }} student(s)</span>
+                <div class="card-body p-4 bg-white d-flex flex-column justify-content-around">
+                    <div class="d-flex justify-content-between align-items-center p-2 rounded mb-2 border" style="background-color: var(--maroon-subtle); border-color: rgba(139,46,36,0.2) !important;">
+                        <span class="fw-bold text-maroon"><i class="bi bi-award-fill me-2 text-gold"></i>Distinction (90% &ndash; 100%)</span>
+                        <span class="badge bg-maroon fs-6">{{ grade_dist['90-100%'] }} candidates</span>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center p-2 rounded bg-light border mb-2">
-                        <span class="fw-bold text-primary"><i class="bi bi-star-fill me-2"></i>First Class (75% - 89%)</span>
-                        <span class="badge bg-primary fs-6">{{ grade_dist['75-89%'] }} student(s)</span>
+                    <div class="d-flex justify-content-between align-items-center p-2 rounded mb-2 border" style="background-color: var(--gold-light); border-color: rgba(212,160,23,0.3) !important;">
+                        <span class="fw-bold text-dark"><i class="bi bi-star-fill me-2 text-gold"></i>First Class (75% &ndash; 89%)</span>
+                        <span class="badge bg-gold text-dark fs-6">{{ grade_dist['75-89%'] }} candidates</span>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center p-2 rounded bg-light border mb-2">
-                        <span class="fw-bold text-warning-emphasis"><i class="bi bi-check-circle-fill me-2"></i>Satisfactory (60% - 74%)</span>
-                        <span class="badge bg-warning text-dark fs-6">{{ grade_dist['60-74%'] }} student(s)</span>
+                    <div class="d-flex justify-content-between align-items-center p-2 rounded mb-2 border bg-light">
+                        <span class="fw-bold text-secondary"><i class="bi bi-check-circle-fill me-2"></i>Satisfactory (60% &ndash; 74%)</span>
+                        <span class="badge bg-secondary fs-6">{{ grade_dist['60-74%'] }} candidates</span>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center p-2 rounded bg-light border">
+                    <div class="d-flex justify-content-between align-items-center p-2 rounded border bg-light">
                         <span class="fw-bold text-danger"><i class="bi bi-exclamation-circle-fill me-2"></i>Needs Improvement (&lt; 60%)</span>
-                        <span class="badge bg-danger fs-6">{{ grade_dist['<60%'] }} student(s)</span>
+                        <span class="badge bg-danger fs-6">{{ grade_dist['<60%'] }} candidates</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Complete Evaluation History Table -->
-    <div class="card shadow-sm border">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history me-2 text-primary"></i>Completed Student Evaluations Log</h5>
-            <span class="badge bg-primary">{{ evaluations|length }} records</span>
+    <div class="card shadow-sm">
+        <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-journal-check me-2 text-gold"></i>Completed Candidate Evaluations Log</span>
+            <span class="badge bg-gold text-dark">{{ evaluations|length }} Records</span>
         </div>
         <div class="card-body p-0">
             {% if evaluations %}
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
-                            <th>Student Details</th>
+                            <th>Student Information</th>
                             <th>Examination</th>
-                            <th>Slot Date & Time</th>
+                            <th>Evaluation Timestamp</th>
                             <th class="text-center">Score Awarded</th>
-                            <th>Remarks</th>
-                            <th class="text-end">Actions</th>
+                            <th>Examiner Remarks</th>
+                            <th class="text-end pe-3" style="width: 150px;">Transcript</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -151,24 +149,24 @@
                                 <div class="small text-muted">{{ ev.booking.student.roll_number or ev.booking.student.email }}</div>
                             </td>
                             <td>
-                                <div class="fw-semibold">{{ ev.booking.slot.examination.name }}</div>
+                                <div class="fw-semibold text-dark">{{ ev.booking.slot.examination.name }}</div>
                                 <div class="small text-muted">{{ ev.booking.slot.examination.course.name }}</div>
                             </td>
                             <td>
-                                <div><i class="bi bi-calendar3 me-1"></i>{{ ev.booking.slot.date }}</div>
+                                <div><i class="bi bi-calendar3 text-maroon me-1"></i>{{ ev.booking.slot.date }}</div>
                                 <div class="small text-muted"><i class="bi bi-clock me-1"></i>{{ ev.booking.slot.time }}</div>
                             </td>
                             <td class="text-center">
-                                <span class="badge bg-success-subtle text-success border border-success px-3 py-2 fs-6">
-                                    {{ ev.marks }}
+                                <span class="badge px-3 py-2 fs-6 font-monospace" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1.5px solid rgba(139,46,36,0.3);">
+                                    {{ ev.marks }} pts
                                 </span>
                             </td>
-                            <td class="small text-secondary">
-                                "{{ ev.remarks or 'Satisfactory evaluation.' }}"
+                            <td class="small text-secondary fst-italic">
+                                &ldquo;{{ ev.remarks or 'Satisfactory evaluation.' }}&rdquo;
                             </td>
-                            <td class="text-end">
+                            <td class="text-end pe-3">
                                 <a href="{{ url_for('view_result_report', evaluation_id=ev.id) }}" class="btn btn-sm btn-outline-primary">
-                                    <i class="bi bi-file-earmark-text me-1"></i>View Transcript
+                                    <i class="bi bi-file-earmark-text me-1"></i>Transcript
                                 </a>
                             </td>
                         </tr>
@@ -178,7 +176,7 @@
             </div>
             {% else %}
             <div class="p-5 text-center text-muted">
-                <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                <i class="bi bi-inbox display-5 d-block mb-2 text-secondary"></i>
                 No previous student evaluations conducted yet.
             </div>
             {% endif %}
@@ -204,11 +202,12 @@
                         {{ grade_dist['<60%'] }}
                     ],
                     backgroundColor: [
-                        '#198754',
-                        '#0d6efd',
-                        '#ffc107',
-                        '#dc3545'
+                        '#8B2E24',
+                        '#D4A017',
+                        '#6E2219',
+                        '#E5E7EB'
                     ],
+                    borderColor: '#ffffff',
                     borderWidth: 2,
                     hoverOffset: 4
                 }]

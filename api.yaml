@@ -1,0 +1,173 @@
+info:
+  title: Examination Portal API
+  version: 1.0.0
+  description: Basic API specification for the examination management portal.
+
+paths:
+  /login:
+    post:
+      summary: User login
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Login successful
+        "401":
+          description: Invalid credentials
+
+  /register:
+    post:
+      summary: Register student
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Account created
+
+  /logout:
+    get:
+      summary: User logout
+      responses:
+        "200":
+          description: Logged out successfully
+
+  /courses:
+    get:
+      summary: Get all courses
+      responses:
+        "200":
+          description: List of courses
+
+  /course/add:
+    post:
+      summary: Add new course
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: description
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Course added
+
+  /examinations:
+    get:
+      summary: Get all examinations
+      responses:
+        "200":
+          description: List of examinations
+
+  /examination/add:
+    post:
+      summary: Create examination
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: course_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Examination created
+
+  /examiner/slots:
+    get:
+      summary: View examiner slots
+      responses:
+        "200":
+          description: Slots list
+    post:
+      summary: Create exam slot
+      parameters:
+        - name: examination_id
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: time
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Slot created
+
+  /examiner/evaluate/{booking_id}:
+    post:
+      summary: Submit student evaluation
+      parameters:
+        - name: booking_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: marks
+          in: query
+          schema:
+            type: integer
+        - name: remarks
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Evaluation submitted
+
+  /student/book-slot/{slot_id}:
+    post:
+      summary: Book an exam slot
+      parameters:
+        - name: slot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Slot booked
+
+  /student/results:
+    get:
+      summary: View student results
+      responses:
+        "200":
+          description: Student results

@@ -1,101 +1,93 @@
 {% extends "base.html" %}
 
-{% block title %}Performance Analytics – {{ role }} Portal{% endblock %}
+{% block title %}Performance Analytics &middot; {{ role }} Portal{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <div>
-            <h2 class="fw-bold mb-1">
-                <i class="bi bi-graph-up-arrow me-2 text-primary"></i>Student Performance Analytics
-            </h2>
-            <p class="text-muted mb-0">
-                {% if role == 'Student' %}
-                    Your academic performance metrics, score trends, and rubric assessments.
-                {% elif role == 'Examiner' %}
-                    Cohort evaluation statistics and scoring distributions for your students.
-                {% else %}
-                    Institution-wide student performance analytics, examination attempts, and scoring averages.
-                {% endif %}
-            </p>
-        </div>
-        <div>
-            <span class="badge bg-secondary-subtle text-secondary border px-3 py-2 fs-6">
-                <i class="bi bi-person-fill me-1"></i>Role: {{ role }}
-            </span>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-graph-up-arrow me-2 text-gold"></i>Student Performance Analytics &amp; Trends</h2>
+                <p>
+                    {% if role == 'Student' %}
+                        Your personal academic progress, score trends over examinations, and rubric evaluations.
+                    {% elif role == 'Examiner' %}
+                        Cohort evaluation statistics, benchmark averages, and marks distributions for your assigned students.
+                    {% else %}
+                        Institutional student performance analytics, examination attempts, and longitudinal scoring metrics.
+                    {% endif %}
+                </p>
+            </div>
+            <div>
+                <span class="badge bg-gold text-dark px-3 py-2 fs-6 shadow-sm">
+                    <i class="bi bi-person-badge-fill me-1"></i>Role: {{ role }}
+                </span>
+            </div>
         </div>
     </div>
 
-    <!-- KPI Summary Cards -->
     <div class="row g-3 mb-4">
-        <!-- Average Marks -->
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card border-0 shadow-sm text-white bg-primary h-100">
+            <div class="card stat-card stat-card-maroon h-100">
                 <div class="card-body p-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Average Marks</div>
-                        <h2 class="display-6 fw-bold mb-0 mt-1">{{ avg_marks }}</h2>
-                        <div class="small opacity-75 mt-1">Across evaluated attempts</div>
+                        <div class="card-title text-light">Average Marks</div>
+                        <div class="stat-value">{{ avg_marks }}</div>
+                        <div class="small text-white-50 mt-1">Across evaluated attempts</div>
                     </div>
-                    <i class="bi bi-calculator display-5 opacity-50"></i>
+                    <i class="bi bi-calculator fs-1 text-gold opacity-75"></i>
                 </div>
             </div>
         </div>
 
-        <!-- Highest Marks -->
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card border-0 shadow-sm text-white bg-success h-100">
+            <div class="card stat-card stat-card-gold h-100">
                 <div class="card-body p-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Highest Marks</div>
-                        <h2 class="display-6 fw-bold mb-0 mt-1">{{ highest_marks }}</h2>
-                        <div class="small opacity-75 mt-1">Peak score achieved</div>
+                        <div class="card-title text-light">Highest Marks</div>
+                        <div class="stat-value">{{ highest_marks }}</div>
+                        <div class="small text-white-50 mt-1">Peak score achieved</div>
                     </div>
-                    <i class="bi bi-trophy display-5 opacity-50"></i>
+                    <i class="bi bi-trophy fs-1 text-white opacity-75"></i>
                 </div>
             </div>
         </div>
 
-        <!-- Examination Attempts -->
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card border-0 shadow-sm text-white bg-info h-100">
+            <div class="card stat-card stat-card-maroon h-100">
                 <div class="card-body p-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Total Attempts</div>
-                        <h2 class="display-6 fw-bold mb-0 mt-1">{{ attempts }}</h2>
-                        <div class="small opacity-75 mt-1">Examination bookings</div>
+                        <div class="card-title text-light">Exam Attempts</div>
+                        <div class="stat-value">{{ attempts }}</div>
+                        <div class="small text-white-50 mt-1">Total reservations</div>
                     </div>
-                    <i class="bi bi-journal-check display-5 opacity-50"></i>
+                    <i class="bi bi-journal-check fs-1 text-gold opacity-75"></i>
                 </div>
             </div>
         </div>
 
-        <!-- Completed Evaluations -->
         <div class="col-md-3 col-sm-6">
-            <div class="card stat-card border-0 shadow-sm text-white bg-dark h-100">
+            <div class="card stat-card stat-card-gold h-100">
                 <div class="card-body p-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="small text-uppercase opacity-75 fw-bold">Evaluations Graded</div>
-                        <h2 class="display-6 fw-bold mb-0 mt-1">{{ completed_count }}</h2>
-                        <div class="small opacity-75 mt-1">Certified outcomes</div>
+                        <div class="card-title text-light">Certified Outcomes</div>
+                        <div class="stat-value">{{ completed_count }}</div>
+                        <div class="small text-white-50 mt-1">Evaluations completed</div>
                     </div>
-                    <i class="bi bi-patch-check display-5 opacity-50"></i>
+                    <i class="bi bi-patch-check fs-1 text-white opacity-75"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Visual Charts (Chart.js) -->
     <div class="row g-4 mb-4">
-        <!-- Performance Trend Line Chart -->
         <div class="col-lg-7">
-            <div class="card shadow-sm border h-100">
-                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-graph-up me-2 text-primary"></i>Performance Trends Over Examinations</h5>
-                    <span class="badge bg-light text-muted border">Score Progression</span>
+            <div class="card shadow-sm h-100" style="border-top: 4px solid var(--maroon);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-graph-up me-2 text-gold"></i>Performance Progression Over Examinations</span>
+                    <span class="badge bg-gold text-dark">Historical Trend</span>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 bg-white">
                     {% if trend_labels and trend_labels|length > 0 %}
                     <div style="position: relative; height: 300px;">
                         <canvas id="performanceTrendChart"></canvas>
@@ -110,14 +102,13 @@
             </div>
         </div>
 
-        <!-- Examination Comparison Bar Chart -->
         <div class="col-lg-5">
-            <div class="card shadow-sm border h-100">
-                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Score Distribution & Benchmarks</h5>
-                    <span class="badge bg-light text-muted border">Metrics</span>
+            <div class="card shadow-sm h-100" style="border-top: 4px solid var(--gold);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-bar-chart-fill me-2 text-gold"></i>Score Distribution &amp; Benchmarks</span>
+                    <span class="badge bg-gold text-dark">Metrics</span>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 bg-white">
                     {% if trend_labels and trend_labels|length > 0 %}
                     <div style="position: relative; height: 300px;">
                         <canvas id="scoreDistributionChart"></canvas>
@@ -125,7 +116,7 @@
                     {% else %}
                     <div class="text-center text-muted py-5">
                         <i class="bi bi-pie-chart display-4 d-block mb-2 text-secondary"></i>
-                        Distribution data will render automatically as exams are graded.
+                        Distribution data will render automatically as exams are evaluated.
                     </div>
                     {% endif %}
                 </div>
@@ -133,51 +124,54 @@
         </div>
     </div>
 
-    <!-- Detailed Assessment Table -->
-    <div class="card shadow-sm border">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-table me-2 text-primary"></i>Evaluation Records & Scores</h5>
-            <span class="badge bg-primary">{{ evaluations|length }} records</span>
+    <div class="card shadow-sm">
+        <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-table me-2 text-gold"></i>Certified Evaluation Ledger</span>
+            <span class="badge bg-gold text-dark">{{ evaluations|length }} Records</span>
         </div>
         <div class="card-body p-0">
             {% if evaluations %}
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Student</th>
-                            <th>Examination</th>
+                            <th style="width: 60px;">#</th>
+                            <th>Student Information</th>
+                            <th>Examination Title</th>
                             <th>Course</th>
                             <th>Date</th>
-                            <th class="text-center">Score</th>
-                            <th>Remarks</th>
+                            <th class="text-center">Score Awarded</th>
+                            <th>Examiner Remarks</th>
                             {% if role == 'Student' %}
-                            <th class="text-end">Action</th>
+                            <th class="text-end pe-3" style="width: 130px;">Action</th>
                             {% endif %}
                         </tr>
                     </thead>
                     <tbody>
                         {% for ev in evaluations %}
                         <tr>
-                            <td class="text-muted">{{ loop.index }}</td>
+                            <td class="text-muted fw-bold">{{ loop.index }}</td>
                             <td>
-                                <div class="fw-bold">{{ ev.booking.student.name }}</div>
+                                <div class="fw-bold text-dark">{{ ev.booking.student.name }}</div>
                                 <div class="small text-muted">{{ ev.booking.student.roll_number or ev.booking.student.email }}</div>
                             </td>
-                            <td class="fw-semibold">{{ ev.booking.slot.examination.name }}</td>
-                            <td>{{ ev.booking.slot.examination.course.name }}</td>
-                            <td>{{ ev.booking.slot.date }}</td>
+                            <td class="fw-semibold text-dark">{{ ev.booking.slot.examination.name }}</td>
+                            <td>
+                                <i class="bi bi-book text-maroon me-1"></i>{{ ev.booking.slot.examination.course.name }}
+                            </td>
+                            <td>
+                                <i class="bi bi-calendar3 text-maroon me-1"></i>{{ ev.booking.slot.date }}
+                            </td>
                             <td class="text-center">
-                                <span class="badge bg-success-subtle text-success border border-success px-3 py-1 fs-6">
-                                    {{ ev.marks }}
+                                <span class="badge px-3 py-2 fs-6 font-monospace" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1.5px solid rgba(139,46,36,0.3);">
+                                    {{ ev.marks }} pts
                                 </span>
                             </td>
-                            <td class="small text-secondary">{{ ev.remarks or '-' }}</td>
+                            <td class="small text-secondary fst-italic">{{ ev.remarks or '-' }}</td>
                             {% if role == 'Student' %}
-                            <td class="text-end">
+                            <td class="text-end pe-3">
                                 <a href="{{ url_for('view_result_report', evaluation_id=ev.id) }}" class="btn btn-sm btn-outline-primary">
-                                    <i class="bi bi-file-earmark-text me-1"></i>Report
+                                    <i class="bi bi-file-earmark-text me-1"></i>Transcript
                                 </a>
                             </td>
                             {% endif %}
@@ -201,7 +195,7 @@
 <script>
     {% if trend_labels and trend_labels|length > 0 %}
     document.addEventListener("DOMContentLoaded", function () {
-        // Line Chart: Performance Trends
+        // Line Chart: Performance Trends (Deep Heritage Maroon)
         const trendCtx = document.getElementById('performanceTrendChart').getContext('2d');
         new Chart(trendCtx, {
             type: 'line',
@@ -210,12 +204,14 @@
                 datasets: [{
                     label: 'Score Obtained',
                     data: {{ trend_scores | tojson }},
-                    borderColor: '#0d6efd',
-                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    borderColor: '#8B2E24',
+                    backgroundColor: 'rgba(139, 46, 36, 0.12)',
                     borderWidth: 3,
                     fill: true,
                     tension: 0.35,
-                    pointBackgroundColor: '#0d6efd',
+                    pointBackgroundColor: '#D4A017',
+                    pointBorderColor: '#8B2E24',
+                    pointBorderWidth: 2,
                     pointRadius: 6,
                     pointHoverRadius: 8
                 }]
@@ -238,7 +234,7 @@
             }
         });
 
-        // Bar Chart: Distribution
+        // Bar Chart: Distribution (Maroon & Ochre Gold alternation)
         const distCtx = document.getElementById('scoreDistributionChart').getContext('2d');
         new Chart(distCtx, {
             type: 'bar',
@@ -248,18 +244,18 @@
                     label: 'Score',
                     data: {{ trend_scores | tojson }},
                     backgroundColor: [
-                        'rgba(13, 110, 253, 0.75)',
-                        'rgba(25, 135, 84, 0.75)',
-                        'rgba(255, 193, 7, 0.75)',
-                        'rgba(13, 202, 240, 0.75)',
-                        'rgba(108, 117, 125, 0.75)'
+                        'rgba(139, 46, 36, 0.85)',
+                        'rgba(212, 160, 23, 0.85)',
+                        'rgba(110, 34, 25, 0.85)',
+                        'rgba(181, 136, 16, 0.85)',
+                        'rgba(163, 56, 45, 0.85)'
                     ],
                     borderColor: [
-                        '#0d6efd',
-                        '#198754',
-                        '#ffc107',
-                        '#0dcaf0',
-                        '#6c757d'
+                        '#8B2E24',
+                        '#D4A017',
+                        '#6E2219',
+                        '#B58810',
+                        '#A3382D'
                     ],
                     borderWidth: 1.5,
                     borderRadius: 6

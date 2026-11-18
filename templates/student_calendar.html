@@ -1,77 +1,75 @@
 {% extends "base.html" %}
 
-{% block title %}Examination Calendar – Student Portal{% endblock %}
+{% block title %}Examination Calendar &middot; Student Portal{% endblock %}
 
 {% block extra_head %}
 <style>
-    .calendar-container { background: #fff; border-radius: 0.5rem; overflow: hidden; }
-    .calendar-header { background: #212529; color: #fff; padding: 1rem 1.5rem; }
-    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); border-left: 1px solid #dee2e6; border-top: 1px solid #dee2e6; }
-    .day-name { background: #f8f9fa; font-weight: 600; text-align: center; padding: 0.6rem 0.2rem; font-size: 0.82rem; border-right: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6; color: #495057; }
-    .calendar-cell { min-height: 105px; padding: 6px; border-right: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6; background: #fff; transition: background 0.15s; }
-    .calendar-cell:hover { background: #fdfdfd; }
-    .calendar-cell.other-month { background: #fbfbfb; color: #adb5bd; }
-    .calendar-cell.today { background: #fff9e6; }
+    .calendar-container { background: #fff; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border-color); }
+    .calendar-header { background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-dark) 100%); color: #fff; padding: 1.1rem 1.5rem; border-bottom: 3px solid var(--gold); }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); border-left: 1px solid #E5E7EB; border-top: 1px solid #E5E7EB; }
+    .day-name { background: #F9FAFB; font-weight: 700; text-align: center; padding: 0.65rem 0.2rem; font-size: 0.82rem; border-right: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; color: var(--maroon); text-transform: uppercase; letter-spacing: 0.5px; }
+    .calendar-cell { min-height: 108px; padding: 6px; border-right: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; background: #fff; transition: background 0.15s; }
+    .calendar-cell:hover { background: rgba(212, 160, 23, 0.06); }
+    .calendar-cell.other-month { background: #FAFAFA; color: #9CA3AF; }
+    .calendar-cell.today { background: #FFFDF5; }
     .cell-date-num { font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; }
-    .today .cell-date-num { background: #0d6efd; color: #fff; }
-    .cal-badge { font-size: 0.72rem; padding: 3px 6px; border-radius: 4px; margin-bottom: 3px; display: block; text-decoration: none; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; font-weight: 500; cursor: pointer; }
-    .cal-badge-booked { background: #d1e7dd; color: #0f5132; border-left: 3px solid #198754; }
-    .cal-badge-deadline { background: #f8d7da; color: #842029; border-left: 3px solid #dc3545; }
-    .cal-badge-open { background: #cff4fc; color: #055160; border-left: 3px solid #0dcaf0; }
-    .cal-badge-announcement { background: #fff3cd; color: #664d03; border-left: 3px solid #ffc107; }
+    .today .cell-date-num { background: var(--maroon); color: #fff; }
+    .cal-badge { font-size: 0.72rem; padding: 3px 6px; border-radius: 4px; margin-bottom: 3px; display: block; text-decoration: none; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; font-weight: 600; cursor: pointer; transition: transform 0.1s ease; }
+    .cal-badge:hover { transform: scale(1.02); }
+    .cal-badge-booked { background: var(--maroon-subtle); color: var(--maroon); border-left: 3.5px solid var(--maroon); }
+    .cal-badge-deadline { background: #FEE2E2; color: #991B1B; border-left: 3.5px solid #DC2626; }
+    .cal-badge-open { background: var(--gold-light); color: #7A5700; border-left: 3.5px solid var(--gold); }
+    .cal-badge-announcement { background: #FEF3C7; color: #92400E; border-left: 3.5px solid #F59E0B; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <!-- Breadcrumb & Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <div>
-            <h2 class="fw-bold mb-1"><i class="bi bi-calendar3 me-2 text-primary"></i>Academic Examination Calendar</h2>
-            <p class="text-muted mb-0">Track upcoming examinations, your booked slots, and booking deadlines.</p>
-        </div>
-        <div class="d-flex gap-2">
-            <a href="{{ url_for('student_examinations') }}" class="btn btn-primary btn-sm">
-                <i class="bi bi-search me-1"></i> Browse & Book Exams
-            </a>
-            <a href="{{ url_for('student_bookings') }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-ticket-perforated me-1"></i> My Bookings
-            </a>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-calendar3 me-2 text-gold"></i>Interactive Academic Examination Calendar</h2>
+                <p>Track scheduled viva sessions, active slot reservation windows, and institutional deadlines.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('student_examinations') }}" class="btn btn-gold btn-sm">
+                    <i class="bi bi-search me-1"></i>Browse &amp; Book Exams
+                </a>
+                <a href="{{ url_for('student_bookings') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-ticket-perforated me-1"></i>My Bookings
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Calendar Legend -->
-    <div class="card mb-4 border-0 shadow-sm bg-white">
+    <div class="card mb-4 shadow-sm bg-white" style="border-left: 4px solid var(--gold);">
         <div class="card-body py-2 px-3">
             <div class="d-flex align-items-center flex-wrap gap-3 small">
-                <span class="fw-bold text-muted">Legend:</span>
-                <span class="badge bg-success-subtle text-success border border-success"><i class="bi bi-check-circle-fill me-1"></i>Booked Exam Slot</span>
-                <span class="badge bg-danger-subtle text-danger border border-danger"><i class="bi bi-alarm-fill me-1"></i>Slot Booking Deadline</span>
-                <span class="badge bg-info-subtle text-info-emphasis border border-info"><i class="bi bi-calendar-check me-1"></i>Booking Opens</span>
-                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning"><i class="bi bi-megaphone-fill me-1"></i>Event / Announcement</span>
+                <span class="fw-bold text-dark"><i class="bi bi-info-circle me-1 text-gold"></i>Legend:</span>
+                <span class="badge" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1px solid rgba(139,46,36,0.3);"><i class="bi bi-check-circle-fill me-1"></i>Booked Exam Slot</span>
+                <span class="badge" style="background-color: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5;"><i class="bi bi-alarm-fill me-1"></i>Slot Booking Deadline</span>
+                <span class="badge" style="background-color: var(--gold-light); color: #7A5700; border: 1px solid #FCD34D;"><i class="bi bi-calendar-check me-1"></i>Booking Window Open</span>
+                <span class="badge" style="background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;"><i class="bi bi-megaphone-fill me-1"></i>Campus Event / Notice</span>
             </div>
         </div>
     </div>
 
     <div class="row g-4">
-        <!-- Main Calendar View -->
         <div class="col-lg-8">
-            <div class="calendar-container shadow-sm border">
-                <!-- Navigation Controls -->
+            <div class="calendar-container shadow-sm">
                 <div class="calendar-header d-flex justify-content-between align-items-center">
                     <button class="btn btn-outline-light btn-sm" id="prevMonthBtn" onclick="changeMonth(-1)">
-                        <i class="bi bi-chevron-left me-1"></i> Prev
+                        <i class="bi bi-chevron-left me-1"></i>Prev
                     </button>
-                    <h4 class="mb-0 fw-bold" id="calendarMonthYear">November 2026</h4>
+                    <h4 class="mb-0 fw-bold" id="calendarMonthYear" style="font-family: 'Cinzel', serif; letter-spacing: 0.5px;">November 2026</h4>
                     <div class="d-flex gap-2">
-                        <button class="btn btn-outline-light btn-sm" onclick="goToToday()">Today</button>
+                        <button class="btn btn-gold btn-sm" onclick="goToToday()">Today</button>
                         <button class="btn btn-outline-light btn-sm" id="nextMonthBtn" onclick="changeMonth(1)">
-                            Next <i class="bi bi-chevron-right ms-1"></i>
+                            Next<i class="bi bi-chevron-right ms-1"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- Day Names Header -->
                 <div class="calendar-grid">
                     <div class="day-name">Sun</div>
                     <div class="day-name">Mon</div>
@@ -82,20 +80,16 @@
                     <div class="day-name">Sat</div>
                 </div>
 
-                <!-- Dynamic Calendar Cells -->
                 <div class="calendar-grid" id="calendarDays">
-                    <!-- Populated by JavaScript -->
                 </div>
             </div>
         </div>
 
-        <!-- Sidebar: Critical Upcoming Deadlines & Bookings -->
         <div class="col-lg-4">
-            <!-- Your Booked Examinations -->
-            <div class="card mb-4 shadow-sm border">
-                <div class="card-header bg-success text-white py-2 d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-check2-circle me-1"></i> Your Booked Slots</h6>
-                    <span class="badge bg-white text-success">{{ bookings|length }}</span>
+            <div class="card mb-4 shadow-sm" style="border-top: 4px solid var(--maroon);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-check2-circle me-1 text-gold"></i>Your Reserved Slots</span>
+                    <span class="badge bg-gold text-dark">{{ bookings|length }}</span>
                 </div>
                 <div class="card-body p-0">
                     {% if bookings %}
@@ -104,20 +98,20 @@
                         <li class="list-group-item p-3">
                             <div class="d-flex justify-content-between align-items-start mb-1">
                                 <span class="fw-bold text-dark">{{ b.slot.examination.name }}</span>
-                                <span class="badge {% if b.status == 'Booked' %}bg-primary{% elif b.status == 'Completed' %}bg-success{% else %}bg-secondary{% endif %}">{{ b.status }}</span>
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>{{ b.status }}</span>
                             </div>
                             <div class="small text-muted mb-1">
-                                <i class="bi bi-calendar-event me-1"></i><strong>{{ b.slot.date }}</strong> at {{ b.slot.time }}
+                                <i class="bi bi-calendar-event text-maroon me-1"></i><strong>{{ b.slot.date }}</strong> at {{ b.slot.time }}
                             </div>
                             <div class="small text-muted">
-                                <i class="bi bi-person me-1"></i>Examiner: {{ b.slot.examiner.name }}
+                                <i class="bi bi-person-badge text-gold me-1"></i>Examiner: {{ b.slot.examiner.name }}
                             </div>
                         </li>
                         {% endfor %}
                     </ul>
                     {% else %}
-                    <div class="p-3 text-center text-muted small">
-                        <i class="bi bi-calendar-x fs-4 d-block mb-1 text-secondary"></i>
+                    <div class="p-4 text-center text-muted small">
+                        <i class="bi bi-calendar-x fs-3 d-block mb-2 text-secondary"></i>
                         No active exam slots booked yet.<br>
                         <a href="{{ url_for('student_examinations') }}" class="btn btn-outline-primary btn-sm mt-2">Book Slot Now</a>
                     </div>
@@ -125,10 +119,9 @@
                 </div>
             </div>
 
-            <!-- Booking Deadlines Alert Box -->
-            <div class="card shadow-sm border">
-                <div class="card-header bg-danger text-white py-2">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle-fill me-1"></i> Booking Deadlines & Schedule</h6>
+            <div class="card shadow-sm" style="border-top: 4px solid var(--gold);">
+                <div class="card-header card-header-gold">
+                    <i class="bi bi-hourglass-bottom me-1"></i>Booking Deadlines &amp; Schedules
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
@@ -140,11 +133,11 @@
                                 <div class="fw-semibold text-dark">{{ ex.name }}</div>
                                 <div class="small text-muted mb-1">{{ ex.course.name }}</div>
                                 <div class="d-flex justify-content-between align-items-center mt-1">
-                                    <span class="badge bg-danger-subtle text-danger border border-danger">
+                                    <span class="badge font-monospace" style="background-color: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5;">
                                         <i class="bi bi-clock me-1"></i>Closes: {{ ex.booking_end.replace('T', ' ') }}
                                     </span>
                                     {% if ex.booking_open %}
-                                    <a href="{{ url_for('student_examination_slots', examination_id=ex.id) }}" class="btn btn-sm btn-outline-primary py-0 px-2">Book</a>
+                                    <a href="{{ url_for('student_examination_slots', examination_id=ex.id) }}" class="btn btn-sm btn-gold py-0 px-2">Book</a>
                                     {% endif %}
                                 </div>
                             </li>
@@ -160,27 +153,23 @@
     </div>
 </div>
 
-<!-- Modal for Calendar Item Detail -->
 <div class="modal fade" id="calendarDetailModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header" id="modalHeader">
+        <div class="modal-content" style="border-radius: var(--radius); overflow: hidden; border: none;">
+            <div class="modal-header card-header-maroon text-white" id="modalHeader">
                 <h5 class="modal-title fw-bold" id="modalTitle">Event Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Details injected by JS -->
+            <div class="modal-body p-4" id="modalBody">
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Calendar Data Initialization & Script -->
 <script>
-    // Prepare events from Jinja
     const calendarEvents = [];
 
     // 1. Bookings
@@ -190,7 +179,7 @@
         type: "booked",
         title: "Booked: {{ b.slot.examination.name }}",
         badgeText: "Exam: {{ b.slot.time }}",
-        details: "Examination: {{ b.slot.examination.name }}<br>Course: {{ b.slot.examination.course.name }}<br>Slot Time: {{ b.slot.time }}<br>Examiner: {{ b.slot.examiner.name }}<br>Status: {{ b.status }}"
+        details: "<strong>Examination:</strong> {{ b.slot.examination.name }}<br><strong>Course:</strong> {{ b.slot.examination.course.name }}<br><strong>Slot Time:</strong> {{ b.slot.time }}<br><strong>Examiner:</strong> {{ b.slot.examiner.name }}<br><strong>Status:</strong> {{ b.status }}"
     });
     {% endfor %}
 
@@ -202,7 +191,7 @@
             type: "deadline",
             title: "Booking Deadline: {{ ex.name }}",
             badgeText: "Deadline: {{ ex.name[:18] }}",
-            details: "Examination: {{ ex.name }}<br>Course: {{ ex.course.name }}<br>Booking Closes at: {{ ex.booking_end.replace('T', ' ') }}<br>Status: {{ ex.status }}"
+            details: "<strong>Examination:</strong> {{ ex.name }}<br><strong>Course:</strong> {{ ex.course.name }}<br><strong>Booking Closes:</strong> {{ ex.booking_end.replace('T', ' ') }}<br><strong>Status:</strong> {{ ex.status }}"
         });
         {% endif %}
         {% if ex.booking_start %}
@@ -211,7 +200,7 @@
             type: "open",
             title: "Booking Opens: {{ ex.name }}",
             badgeText: "Opens: {{ ex.name[:18] }}",
-            details: "Examination: {{ ex.name }}<br>Course: {{ ex.course.name }}<br>Booking Commences: {{ ex.booking_start.replace('T', ' ') }}"
+            details: "<strong>Examination:</strong> {{ ex.name }}<br><strong>Course:</strong> {{ ex.course.name }}<br><strong>Booking Commences:</strong> {{ ex.booking_start.replace('T', ' ') }}"
         });
         {% endif %}
     {% endfor %}

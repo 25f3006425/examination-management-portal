@@ -1,90 +1,116 @@
 {% extends "base.html" %}
 
+{% block title %}Evaluate Candidate &middot; Faculty Portal{% endblock %}
+
 {% block content %}
-
-<div class="container mt-4">
-
-    <h2>Evaluate Student</h2>
-
-    <hr>
-
-    <p>
-        <strong>Student:</strong>
-        {{ booking.student.name }}
-    </p>
-
-    <p>
-        <strong>Examination:</strong>
-        {{ booking.slot.examination.name }}
-    </p>
-
-    <h4 class="mt-4">Examination Rubric</h4>
-
-    <form method="POST">
-
-        <table class="table table-bordered">
-
-            <thead>
-                <tr>
-                    <th>Criterion</th>
-                    <th>Maximum Marks</th>
-                    <th>Marks Awarded</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for rubric in rubrics %}
-
-                <tr>
-
-                    <td>{{ rubric.criterion }}</td>
-
-                    <td>{{ rubric.marks }}</td>
-
-                    <td>
-
-                        <input type="number"
-                               name="rubric_{{ rubric.id }}"
-                               class="form-control"
-                               min="0"
-                               max="{{ rubric.marks }}"
-                               value="{{ marks_by_rubric.get(rubric.id, '') }}"
-                               required>
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-        <div class="mb-3">
-
-            <label class="form-label">
-                Remarks
-            </label>
-
-            <textarea name="remarks"
-                      class="form-control"
-                      rows="4">{{ evaluation.remarks if evaluation else '' }}</textarea>
-
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-award me-2 text-gold"></i>Student Assessment &amp; Marks Allocation</h2>
+                <p>Candidate: <strong>{{ booking.student.name }}</strong> &middot; Examination: {{ booking.slot.examination.name }}</p>
+            </div>
+            <div>
+                <a href="{{ url_for('examiner_bookings') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Bookings
+                </a>
+            </div>
         </div>
+    </div>
 
-        <button type="submit" class="btn btn-primary">
-            Submit Evaluation
-        </button>
+    <div class="card shadow-sm mb-4" style="border-top: 4px solid var(--maroon);">
+        <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-person-circle me-2 text-gold"></i>Candidate &amp; Examination Profile</span>
+            <span class="badge bg-gold text-dark">Session #{{ booking.slot.id }}</span>
+        </div>
+        <div class="card-body p-4 bg-white">
+            <div class="row g-3">
+                <div class="col-md-3 col-sm-6">
+                    <span class="text-muted small d-block">Candidate Name:</span>
+                    <strong class="text-dark fs-6">{{ booking.student.name }}</strong>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <span class="text-muted small d-block">Student Email:</span>
+                    <span>{{ booking.student.email }}</span>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <span class="text-muted small d-block">Examination:</span>
+                    <strong class="text-maroon">{{ booking.slot.examination.name }}</strong>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <span class="text-muted small d-block">Session Timestamp:</span>
+                    <span class="badge font-monospace" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1px solid rgba(139,46,36,0.2);">
+                        <i class="bi bi-calendar3 me-1"></i>{{ booking.slot.date }} ({{ booking.slot.time }})
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <a href="{{ url_for('examiner_bookings') }}"
-           class="btn btn-secondary">
-            Cancel
-        </a>
+    <div class="card shadow-sm" style="border-top: 4px solid var(--gold);">
+        <div class="card-header card-header-gold">
+            <i class="bi bi-card-checklist me-2"></i>Assessment Rubrics &amp; Examiner Feedback
+        </div>
+        <div class="card-body p-4 bg-white">
+            <form method="POST">
+                <div class="table-responsive mb-4">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Evaluation Criterion</th>
+                                <th class="text-center" style="width: 160px;">Max Marks</th>
+                                <th style="width: 200px;">Marks Awarded</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rubric in rubrics %}
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold text-dark">{{ rubric.criterion }}</div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-secondary font-monospace">{{ rubric.marks }} pts</span>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="number"
+                                               name="rubric_{{ rubric.id }}"
+                                               class="form-control"
+                                               min="0"
+                                               max="{{ rubric.marks }}"
+                                               value="{{ marks_by_rubric.get(rubric.id, '') }}"
+                                               placeholder="0 - {{ rubric.marks }}"
+                                               required>
+                                        <span class="input-group-text small text-muted">/ {{ rubric.marks }}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted p-4">
+                                    No rubric criteria configured for this examination.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
 
-    </form>
+                <div class="mb-4">
+                    <label class="form-label">Confidential Examiner Remarks &amp; Constructive Feedback</label>
+                    <textarea name="remarks" class="form-control" rows="4" placeholder="Provide qualitative assessment observations, code review comments, or areas for improvement...">{{ evaluation.remarks if evaluation else '' }}</textarea>
+                </div>
 
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('examiner_bookings') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4 py-2">
+                        <i class="bi bi-check2-circle me-1"></i>Submit Final Evaluation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-
 {% endblock %}

@@ -1,75 +1,75 @@
 {% extends "base.html" %}
 
-{% block title %}Examination Timelines & Controls – {{ examination.name }}{% endblock %}
+{% block title %}Examination Timelines &amp; Controls &middot; {{ examination.name }}{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <div>
-            <h2 class="fw-bold mb-1"><i class="bi bi-clock-history me-2 text-primary"></i>Examination Timelines & Operational Controls</h2>
-            <p class="text-muted mb-0">Examination: <strong>{{ examination.name }}</strong> (Course: {{ examination.course.name }})</p>
-        </div>
-        <div>
-            <a href="{{ url_for('examinations') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i> Back to Examinations
-            </a>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-clock-history me-2 text-gold"></i>Examination Timelines &amp; Emergency Overrides</h2>
+                <p>Examination: <strong>{{ examination.name }}</strong> &middot; Course: {{ examination.course.name }}</p>
+            </div>
+            <div>
+                <a href="{{ url_for('examinations') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Examinations
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Overview Status Card -->
-    <div class="card shadow-sm border mb-4 bg-white">
-        <div class="card-body p-4">
-            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-info-circle me-2 text-primary"></i>Current Live Status & Automation State</h5>
+    <div class="card shadow-sm mb-4" style="border-top: 4px solid var(--maroon);">
+        <div class="card-body p-4 bg-white">
+            <h5 class="fw-bold text-maroon mb-3"><i class="bi bi-broadcast me-2 text-gold"></i>Current Live Portal &amp; Timeline State</h5>
             <div class="row g-3">
                 <div class="col-md-6">
-                    <div class="p-3 rounded border bg-light">
+                    <div class="p-3 rounded border" style="background-color: #FAFAFA; border-left: 4px solid var(--maroon) !important;">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="fw-bold text-dark">Faculty Slot Creation:</span>
                             {% if examination.slot_creation_open %}
-                                <span class="badge bg-success fs-6"><i class="bi bi-play-circle-fill me-1"></i>ACTIVE / OPEN</span>
+                                <span class="badge bg-success fs-6"><i class="bi bi-play-circle-fill me-1"></i>OPEN / ACTIVE</span>
                             {% else %}
                                 <span class="badge bg-secondary fs-6"><i class="bi bi-stop-circle-fill me-1"></i>CLOSED</span>
                             {% endif %}
                         </div>
-                        <div class="small text-muted">
+                        <div class="small mb-1">
                             Mode: 
                             {% if examination.slot_creation_override == 'open' %}
-                                <span class="badge bg-warning text-dark"><i class="bi bi-exclamation-circle me-1"></i>Force Opened by Admin (Override)</span>
+                                <span class="badge bg-gold text-dark"><i class="bi bi-shield-exclamation me-1"></i>Force Opened (Admin Override)</span>
                             {% elif examination.slot_creation_override == 'closed' %}
-                                <span class="badge bg-danger"><i class="bi bi-slash-circle me-1"></i>Stopped Abruptly by Admin (Override)</span>
+                                <span class="badge bg-danger"><i class="bi bi-slash-circle me-1"></i>Stopped Abruptly (Admin Override)</span>
                             {% else %}
-                                <span class="badge bg-info-subtle text-info-emphasis border"><i class="bi bi-cpu me-1"></i>Automatic Timeline Schedule</span>
+                                <span class="badge" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1px solid rgba(139,46,36,0.2);"><i class="bi bi-cpu me-1"></i>Automatic Timeline</span>
                             {% endif %}
                         </div>
-                        <div class="small text-secondary mt-1">
-                            Schedule: {{ examination.slot_creation_start or 'Not set' }} to {{ examination.slot_creation_end or 'Not set' }}
+                        <div class="small text-muted font-monospace">
+                            Schedule: {{ examination.slot_creation_start or 'Not set' }} &rarr; {{ examination.slot_creation_end or 'Not set' }}
                         </div>
                     </div>
                 </div>
 
                 <div class="col-md-6">
-                    <div class="p-3 rounded border bg-light">
+                    <div class="p-3 rounded border" style="background-color: #FAFAFA; border-left: 4px solid var(--gold) !important;">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="fw-bold text-dark">Student Slot Booking:</span>
                             {% if examination.booking_open %}
-                                <span class="badge bg-success fs-6"><i class="bi bi-play-circle-fill me-1"></i>ACTIVE / OPEN</span>
+                                <span class="badge bg-success fs-6"><i class="bi bi-play-circle-fill me-1"></i>OPEN / ACTIVE</span>
                             {% else %}
                                 <span class="badge bg-secondary fs-6"><i class="bi bi-stop-circle-fill me-1"></i>CLOSED</span>
                             {% endif %}
                         </div>
-                        <div class="small text-muted">
+                        <div class="small mb-1">
                             Mode: 
                             {% if examination.booking_override == 'open' %}
-                                <span class="badge bg-warning text-dark"><i class="bi bi-exclamation-circle me-1"></i>Force Opened by Admin (Override)</span>
+                                <span class="badge bg-gold text-dark"><i class="bi bi-shield-exclamation me-1"></i>Force Opened (Admin Override)</span>
                             {% elif examination.booking_override == 'closed' %}
-                                <span class="badge bg-danger"><i class="bi bi-slash-circle me-1"></i>Stopped Abruptly by Admin (Override)</span>
+                                <span class="badge bg-danger"><i class="bi bi-slash-circle me-1"></i>Stopped Abruptly (Admin Override)</span>
                             {% else %}
-                                <span class="badge bg-info-subtle text-info-emphasis border"><i class="bi bi-cpu me-1"></i>Automatic Timeline Schedule</span>
+                                <span class="badge" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1px solid rgba(139,46,36,0.2);"><i class="bi bi-cpu me-1"></i>Automatic Timeline</span>
                             {% endif %}
                         </div>
-                        <div class="small text-secondary mt-1">
-                            Schedule: {{ examination.booking_start or 'Not set' }} to {{ examination.booking_end or 'Not set' }}
+                        <div class="small text-muted font-monospace">
+                            Schedule: {{ examination.booking_start or 'Not set' }} &rarr; {{ examination.booking_end or 'Not set' }}
                         </div>
                     </div>
                 </div>
@@ -78,112 +78,108 @@
     </div>
 
     <div class="row g-4">
-        <!-- Section 1: Timelines Configuration with Cap Validation -->
         <div class="col-lg-7">
-            <div class="card shadow-sm border h-100">
-                <div class="card-header bg-dark text-white py-3">
-                    <h5 class="fw-bold mb-0"><i class="bi bi-calendar-range me-2"></i>Configure Automated Timelines</h5>
+            <div class="card shadow-sm h-100" style="border-top: 4px solid var(--maroon);">
+                <div class="card-header card-header-maroon">
+                    <i class="bi bi-calendar-range me-2 text-gold"></i>Automated Schedule Timelines
                 </div>
-                <div class="card-body p-4">
-                    <div class="alert alert-info py-2 small mb-4">
-                        <i class="bi bi-info-circle-fill me-1"></i> <strong>Automatic Scheduling Rules:</strong>
-                        Slot creation and booking automatically commence at designated start times and conclude at deadline.
-                        <strong>Constraint:</strong> Booking must only commence <em>after</em> slot creation has ended.
+                <div class="card-body p-4 bg-white">
+                    <div class="alert alert-info py-2 small mb-4" style="background-color: var(--gold-light); border-color: #F0C45B; color: #7A5700;">
+                        <i class="bi bi-info-circle-fill me-1"></i> <strong>Scheduling Rule &amp; Cap Constraint:</strong>
+                        Slot creation and booking start automatically at designated start timestamps.
+                        <strong>Constraint:</strong> Slot booking can only start <em>after</em> slot creation window ends.
                     </div>
 
                     <form method="POST" id="timelineForm">
-                        <h6 class="fw-bold text-primary mb-3">1. Examiner Slot Creation Window</h6>
+                        <h6 class="fw-bold text-maroon mb-3"><i class="bi bi-1-circle-fill me-1 text-gold"></i>Examiner Slot Creation Window</h6>
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Slot Creation Start</label>
+                                <label class="form-label">Slot Creation Start</label>
                                 <input type="datetime-local" id="slot_creation_start" name="slot_creation_start" class="form-control" value="{{ examination.slot_creation_start or '' }}">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Slot Creation End</label>
+                                <label class="form-label">Slot Creation End</label>
                                 <input type="datetime-local" id="slot_creation_end" name="slot_creation_end" class="form-control" value="{{ examination.slot_creation_end or '' }}" onchange="updateBookingMinCap()">
                             </div>
                         </div>
 
-                        <h6 class="fw-bold text-primary mb-3">2. Student Slot Booking Window (Starts After Slot Creation Ends)</h6>
+                        <h6 class="fw-bold text-maroon mb-3"><i class="bi bi-2-circle-fill me-1 text-gold"></i>Student Slot Booking Window (Post-Slot Creation Cap)</h6>
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Booking Start <span class="text-danger">*</span></label>
+                                <label class="form-label">Booking Start <span class="text-danger">*</span></label>
                                 <input type="datetime-local" id="booking_start" name="booking_start" class="form-control" value="{{ examination.booking_start or '' }}">
-                                <div class="form-text text-danger" id="capWarning" style="display: none;">
+                                <div class="form-text text-danger small" id="capWarning" style="display: none;">
                                     Must be equal to or after Slot Creation End.
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Booking End (Deadline) <span class="text-danger">*</span></label>
+                                <label class="form-label">Booking End (Deadline) <span class="text-danger">*</span></label>
                                 <input type="datetime-local" id="booking_end" name="booking_end" class="form-control" value="{{ examination.booking_end or '' }}">
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">
-                            <i class="bi bi-save me-1"></i> Save Schedule Timelines
+                        <button type="submit" class="btn btn-primary px-4 py-2">
+                            <i class="bi bi-save me-1"></i>Save Schedule Timelines
                         </button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- Section 2: Admin Abrupt Controls & Overrides -->
         <div class="col-lg-5">
-            <div class="card shadow-sm border h-100">
-                <div class="card-header bg-white py-3 border-bottom">
-                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-toggles me-2 text-primary"></i>Immediate Manual Override Controls</h5>
+            <div class="card shadow-sm h-100" style="border-top: 4px solid var(--gold);">
+                <div class="card-header card-header-gold">
+                    <i class="bi bi-toggles me-2"></i>Immediate Manual Override Controls
                 </div>
-                <div class="card-body p-4 d-flex flex-column justify-content-between">
-                    <!-- Control 1: Slot Creation -->
-                    <div class="p-3 rounded border mb-4 bg-light">
-                        <h6 class="fw-bold text-dark mb-2">Faculty Slot Creation Override</h6>
-                        <p class="small text-muted mb-3">Force open early or abruptly stop examiners from adding/editing exam slots.</p>
+                <div class="card-body p-4 bg-white d-flex flex-column justify-content-between">
+                    <div class="p-3 rounded border mb-4" style="background-color: #FAFAFA;">
+                        <h6 class="fw-bold text-maroon mb-1">Faculty Slot Creation Override</h6>
+                        <p class="small text-muted mb-3">Force start early or abruptly stop faculty from publishing new examination slots.</p>
                         
                         <div class="d-flex gap-2 flex-wrap">
                             <form method="POST" action="{{ url_for('toggle_slot_creation', examination_id=examination.id) }}" class="flex-grow-1">
                                 {% if examination.slot_creation_open %}
-                                <button type="submit" class="btn btn-danger w-100 fw-semibold">
-                                    <i class="bi bi-stop-circle me-1"></i> Stop Slot Creation Abruptly
+                                <button type="submit" class="btn btn-danger w-100 btn-sm">
+                                    <i class="bi bi-stop-circle me-1"></i>Stop Slot Creation Abruptly
                                 </button>
                                 {% else %}
-                                <button type="submit" class="btn btn-success w-100 fw-semibold">
-                                    <i class="bi bi-play-circle me-1"></i> Start Slot Creation Immediately
+                                <button type="submit" class="btn btn-success w-100 btn-sm">
+                                    <i class="bi bi-play-circle me-1"></i>Start Slot Creation Immediately
                                 </button>
                                 {% endif %}
                             </form>
 
                             {% if examination.slot_creation_override %}
                             <form method="POST" action="{{ url_for('reset_slot_override', examination_id=examination.id) }}">
-                                <button type="submit" class="btn btn-outline-secondary" title="Return to automatic timeline">
-                                    <i class="bi bi-arrow-counterclockwise"></i> Reset Auto
+                                <button type="submit" class="btn btn-outline-secondary btn-sm" title="Revert to automated timeline schedule">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
                                 </button>
                             </form>
                             {% endif %}
                         </div>
                     </div>
 
-                    <!-- Control 2: Student Booking -->
-                    <div class="p-3 rounded border bg-light">
-                        <h6 class="fw-bold text-dark mb-2">Student Slot Booking Override</h6>
-                        <p class="small text-muted mb-3">Start student reservations early or shut down all booking access abruptly.</p>
+                    <div class="p-3 rounded border" style="background-color: #FAFAFA;">
+                        <h6 class="fw-bold text-maroon mb-1">Student Slot Booking Override</h6>
+                        <p class="small text-muted mb-3">Authorize immediate student reservations or terminate slot booking abruptly.</p>
 
                         <div class="d-flex gap-2 flex-wrap">
                             <form method="POST" action="{{ url_for('toggle_booking', examination_id=examination.id) }}" class="flex-grow-1">
                                 {% if examination.booking_open %}
-                                <button type="submit" class="btn btn-danger w-100 fw-semibold">
-                                    <i class="bi bi-stop-circle me-1"></i> Stop Student Booking Abruptly
+                                <button type="submit" class="btn btn-danger w-100 btn-sm">
+                                    <i class="bi bi-stop-circle me-1"></i>Stop Student Booking Abruptly
                                 </button>
                                 {% else %}
-                                <button type="submit" class="btn btn-success w-100 fw-semibold">
-                                    <i class="bi bi-play-circle me-1"></i> Start Student Booking Immediately
+                                <button type="submit" class="btn btn-success w-100 btn-sm">
+                                    <i class="bi bi-play-circle me-1"></i>Start Student Booking Immediately
                                 </button>
                                 {% endif %}
                             </form>
 
                             {% if examination.booking_override %}
                             <form method="POST" action="{{ url_for('reset_booking_override', examination_id=examination.id) }}">
-                                <button type="submit" class="btn btn-outline-secondary" title="Return to automatic timeline">
-                                    <i class="bi bi-arrow-counterclockwise"></i> Reset Auto
+                                <button type="submit" class="btn btn-outline-secondary btn-sm" title="Revert to automated timeline schedule">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
                                 </button>
                             </form>
                             {% endif %}
@@ -210,7 +206,7 @@
         if (slotEnd && bookingStart && bookingStart < slotEnd) {
             e.preventDefault();
             document.getElementById("capWarning").style.display = "block";
-            alert("Validation Error: Slot booking can only start AFTER slot creation ends (" + slotEnd.replace("T", " ") + "). Please adjust the booking start time.");
+            alert("Cap Validation Rule: Slot booking can only start AFTER slot creation ends (" + slotEnd.replace("T", " ") + "). Please adjust the booking start time.");
         }
     });
 

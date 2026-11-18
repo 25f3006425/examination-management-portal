@@ -1,47 +1,73 @@
 {% extends "base.html" %}
 
+{% block title %}Assigned Examinations &middot; Faculty Portal{% endblock %}
+
 {% block content %}
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-clipboard2-check me-2 text-gold"></i>Assigned Faculty Examinations</h2>
+                <p>Curriculum examinations and subjects assigned to you for student evaluation and slot creation.</p>
+            </div>
+            <div>
+                <a href="{{ url_for('examiner_dashboard') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
 
-<div class="container mt-4">
-
-    <h2>My Assigned Examinations</h2>
-
-    {% if examinations %}
-
-    <table class="table table-bordered">
-
-        <thead>
-            <tr>
-                <th>Examination ID</th>
-                <th>Examination Name</th>
-                <th>Course</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-
-        <tbody>
-
-            {% for examination in examinations %}
-
-            <tr>
-                <td>{{ examination.id }}</td>
-                <td>{{ examination.name }}</td>
-                <td>{{ examination.course.name }}</td>
-                <td>{{ examination.status }}</td>
-            </tr>
-
-            {% endfor %}
-
-        </tbody>
-
-    </table>
-
-    {% else %}
-
-    <p>No examinations have been assigned to you yet.</p>
-
-    {% endif %}
-
+    <div class="card shadow-sm">
+        <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-journal-bookmark-fill me-2 text-gold"></i>Curriculum Examination Roster</span>
+            <span class="badge bg-gold text-dark">{{ examinations|length }} Assigned</span>
+        </div>
+        <div class="card-body p-0">
+            {% if examinations %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Exam ID</th>
+                            <th>Examination Title</th>
+                            <th>Course Name</th>
+                            <th class="text-center">Live Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for examination in examinations %}
+                        <tr>
+                            <td class="fw-bold text-muted">#{{ examination.id }}</td>
+                            <td>
+                                <span class="fw-bold text-dark fs-6">{{ examination.name }}</span>
+                            </td>
+                            <td>
+                                <i class="bi bi-book text-maroon me-1"></i>{{ examination.course.name }}
+                            </td>
+                            <td class="text-center">
+                                {% if examination.status == 'Booking Open' %}
+                                    <span class="badge bg-success"><i class="bi bi-ticket-perforated me-1"></i>Booking Open</span>
+                                {% elif examination.status == 'Slot Creation' %}
+                                    <span class="badge bg-maroon"><i class="bi bi-clock-history me-1"></i>Slot Creation</span>
+                                {% elif examination.status == 'Completed' %}
+                                    <span class="badge bg-secondary"><i class="bi bi-check2-circle me-1"></i>Completed</span>
+                                {% else %}
+                                    <span class="badge bg-gold text-dark">{{ examination.status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-journal-x display-5 d-block mb-2 text-secondary"></i>
+                <p class="mb-0">No examinations have been assigned to your faculty profile yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
-
 {% endblock %}

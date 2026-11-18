@@ -1,119 +1,128 @@
 {% extends "base.html" %}
 
+{% block title %}Manage Examination Slots &middot; Faculty Portal{% endblock %}
+
 {% block content %}
-
-<div class="container mt-4">
-
-    <h2>Manage Examination Slots</h2>
-
-    <hr>
-
-    <h4>Create a New Slot</h4>
-
-    {% if examinations %}
-
-    <form method="POST" class="mb-4">
-
-        <div class="mb-3">
-            <label class="form-label">Select Examination</label>
-
-            <select name="examination_id" class="form-control" required>
-                <option value="">Choose Examination</option>
-
-                {% for examination in examinations %}
-                <option value="{{ examination.id }}">
-                    {{ examination.name }}
-                </option>
-                {% endfor %}
-
-            </select>
+<div class="container my-3">
+    <div class="erp-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2><i class="bi bi-clock-history me-2 text-gold"></i>Faculty Slot Management Console</h2>
+                <p>Create viva evaluation time slots for active examinations within designated scheduling timelines.</p>
+            </div>
+            <div>
+                <a href="{{ url_for('examiner_dashboard') }}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Dashboard
+                </a>
+            </div>
         </div>
+    </div>
 
-        <div class="mb-3">
-            <label class="form-label">Date</label>
-            <input type="date"
-                   name="date"
-                   class="form-control"
-                   required>
-        </div>
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card shadow-sm" style="border-top: 4px solid var(--maroon);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-calendar-plus me-2 text-gold"></i>Create New Viva Slot</span>
+                    <span class="badge bg-gold text-dark">Faculty Slot</span>
+                </div>
+                <div class="card-body p-4 bg-white">
+                    {% if examinations %}
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Target Examination <span class="text-danger">*</span></label>
+                            <select name="examination_id" class="form-select" required>
+                                <option value="">&mdash; Choose Examination &mdash;</option>
+                                {% for examination in examinations %}
+                                <option value="{{ examination.id }}">{{ examination.name }} ({{ examination.course.name }})</option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text small">Only exams in active slot creation window appear here.</div>
+                        </div>
 
-        <div class="mb-3">
-            <label class="form-label">Time</label>
-            <input type="time"
-                   name="time"
-                   class="form-control"
-                   required>
-        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Scheduled Date <span class="text-danger">*</span></label>
+                            <input type="date" name="date" class="form-control" required>
+                        </div>
 
-        <button type="submit" class="btn btn-primary">
-            Create Slot
-        </button>
+                        <div class="mb-4">
+                            <label class="form-label">Scheduled Time Window <span class="text-danger">*</span></label>
+                            <input type="time" name="time" class="form-control" required>
+                        </div>
 
-    </form>
-
-    {% else %}
-
-    <p>No examinations are currently open for slot creation.</p>
-
-    {% endif %}
-
-    <hr>
-
-    <h4>My Examination Slots</h4>
-
-    {% if slots %}
-
-    <table class="table table-bordered">
-
-        <thead>
-            <tr>
-                <th>Examination</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-
-        <tbody>
-
-            {% for slot in slots %}
-
-            <tr>
-                <td>{{ slot.examination.name }}</td>
-                <td>{{ slot.date }}</td>
-                <td>{{ slot.time }}</td>
-
-                <td>
-                    <a href="{{ url_for('edit_examiner_slot', slot_id=slot.id) }}"
-                       class="btn btn-warning btn-sm">
-                        Edit
-                    </a>
-
-                    <form method="POST"
-                          action="{{ url_for('delete_examiner_slot', slot_id=slot.id) }}"
-                          style="display:inline;">
-
-                        <button type="submit"
-                                class="btn btn-danger btn-sm">
-                            Delete
+                        <button type="submit" class="btn btn-primary w-100 py-2">
+                            <i class="bi bi-plus-circle me-1"></i>Publish Examination Slot
                         </button>
-
                     </form>
-                </td>
-            </tr>
+                    {% else %}
+                    <div class="p-4 text-center text-muted">
+                        <i class="bi bi-calendar-x display-6 d-block mb-2 text-secondary"></i>
+                        <h6 class="fw-bold">No Open Timelines</h6>
+                        <p class="small mb-0">No examinations are currently open for slot creation. The administrator or designated timeline must open slot creation first.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
-            {% endfor %}
-
-        </tbody>
-
-    </table>
-
-    {% else %}
-
-    <p>You have not created any slots yet.</p>
-
-    {% endif %}
-
+        <div class="col-lg-7">
+            <div class="card shadow-sm" style="border-top: 4px solid var(--gold);">
+                <div class="card-header card-header-maroon d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-calendar-week me-2 text-gold"></i>My Configured Examination Slots</span>
+                    <span class="badge bg-gold text-dark">{{ slots|length }} Slots</span>
+                </div>
+                <div class="card-body p-0">
+                    {% if slots %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Examination</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th class="text-end pe-3" style="width: 140px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for slot in slots %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold text-dark">{{ slot.examination.name }}</div>
+                                        <div class="small text-muted">{{ slot.examination.course.name if slot.examination.course else '' }}</div>
+                                    </td>
+                                    <td>
+                                        <i class="bi bi-calendar3 text-maroon me-1"></i>{{ slot.date }}
+                                    </td>
+                                    <td>
+                                        <span class="badge font-monospace" style="background-color: var(--maroon-subtle); color: var(--maroon); border: 1px solid rgba(139,46,36,0.2);">
+                                            <i class="bi bi-clock me-1"></i>{{ slot.time }}
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-3">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('edit_examiner_slot', slot_id=slot.id) }}" class="btn btn-gold" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form method="POST" action="{{ url_for('delete_examiner_slot', slot_id=slot.id) }}" style="display:inline;" onsubmit="return confirm('Delete this slot?');">
+                                                <button type="submit" class="btn btn-outline-danger" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="p-5 text-center text-muted">
+                        <i class="bi bi-calendar-minus display-5 d-block mb-2 text-secondary"></i>
+                        <p class="mb-0">You have not created any examination slots yet.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
 {% endblock %}
